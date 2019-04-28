@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 import mysql.connector
@@ -14,6 +13,12 @@ database = mysql.connector.connect(
         passwd="password"
     )
 query = database.cursor()
+
+@app.after_request
+def after_request(response):
+    if query is not None:
+        database.commit()
+    return response
 
 @app.route('/')
 def hello_world():
