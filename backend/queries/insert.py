@@ -3,11 +3,15 @@ def users(Email, PW):
     INSERT INTO users(Email, PW) VALUES ({}, {})
     '''.format(Email, PW)
 
-def customer(Email, FirstName, LastName):
+def shoppingcart():
     return '''
-    INSERT INTO shoppingcart(CartID) VALUES (NULL);
-    INSERT INTO customer(Email, FirstName, LastName, CurrentCart) VALUES ({}, {}, {}, LAST_INSERT_ID())
-    '''.format(Email, FirstName, LastName)
+    INSERT INTO shoppingcart(CartID) VALUES (NULL)
+    '''
+
+def customer(Email, FirstName, LastName, CartID):
+    return '''
+    INSERT INTO customer(Email, FirstName, LastName, CurrentCart) VALUES ({}, {}, {}, {})
+    '''.format(Email, FirstName, LastName, CartID)
 
 def seller(Email, DisplayName):
     return '''
