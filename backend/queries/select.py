@@ -1,4 +1,4 @@
-def seller_names():
+def sellers():
     return '''
-    SELECT DisplayName FROM seller
+    SELECT DisplayName, Email FROM seller
     '''

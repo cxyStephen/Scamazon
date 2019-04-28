@@ -1,7 +1,13 @@
-def user(Email, PW):
+def users(Email, PW):
     return '''
-    INSERT INTO user(Email, PW) VALUES ({}, {})
+    INSERT INTO users(Email, PW) VALUES ({}, {})
     '''.format(Email, PW)
+
+def customer(Email, FirstName, LastName):
+    return '''
+    INSERT INTO shoppingcart(CartID) VALUES (NULL);
+    INSERT INTO customer(Email, FirstName, LastName, CurrentCart) VALUES ({}, {}, {}, LAST_INSERT_ID())
+    '''.format(Email, FirstName, LastName)
 
 def seller(Email, DisplayName):
     return '''

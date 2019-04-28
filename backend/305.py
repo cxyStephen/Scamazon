@@ -31,6 +31,22 @@ def hello_world():
         
     return out
 
+@app.route('/create_customer', methods=['POST'])
+def create_customer():
+    req = request.args
+    name1 = req.get('fname')
+    name2 = req.get('lname')
+    email = req.get('email')
+    pw = req.get('pw')
+
+    try:
+        query.execute(insert.users(email, pw))
+        query.execute(insert.customer(email, name1, name2), multi=True)
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new customer " + email), 200
+
 @app.route('/create_seller', methods=['POST'])
 def create_seller():
     req = request.args
@@ -39,22 +55,25 @@ def create_seller():
     pw = req.get('pw')
 
     try:
-        query.execute(insert.user(email, pw))
+        query.execute(insert.users(email, pw))
         query.execute(insert.seller(email, name))
     except Exception as e:
-        return jsonify(success=False, message=str(e)), 200
+        return error_response(e)
     
-    return jsonify(success=True, message="successfully created new seller " + name), 200
+    return jsonify(success=True, message="successfully created new seller " + email), 200
 
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
     try:
-        query.execute(select.seller_names())    
+        query.execute(select.sellers())    
     except Exception as e:
-        return jsonify(success=False, message=str(e)), 200
+        return error_response(e)
 
     out = []
     for val in query:
-        out.append(val[0])
-        
-    return jsonify(sellers=out), 200
+        out.append({'display_name': val[0], 'email': val[1]})
+
+    return jsonify(success=True, sellers=out), 200
+
+def error_response(e):
+    return jsonify(success=False, message=str(e)), 500
