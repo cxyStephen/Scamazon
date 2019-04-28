@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from queries import insert, select
 
 import mysql.connector
 
@@ -37,24 +38,23 @@ def create_seller():
     email = req.get('email')
     pw = req.get('pw')
 
-    values = insert_format([email, pw])
-    query.execute("INSERT INTO user(Email, PW) VALUES " + values)
-
-    values = insert_format([email, name])
-    query.execute("INSERT INTO seller(Email, DisplayName) VALUES " + values)
+    try:
+        query.execute(insert.user(email, pw))
+        query.execute(insert.seller(email, name))
+    except Exception as e:
+        return jsonify(success=False, message=str(e)), 200
+    
     return jsonify(success=True, message="successfully created new seller " + name), 200
 
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
-    query.execute("SELECT DisplayName FROM seller")
+    try:
+        query.execute(select.seller_names())    
+    except Exception as e:
+        return jsonify(success=False, message=str(e)), 200
+
     out = []
     for val in query:
         out.append(val[0])
+        
     return jsonify(sellers=out), 200
-
-def insert_format(v):
-    out = '('
-    for val in v:
-        out += val + ','
-    out = out[:-1] + ')'
-    return out
