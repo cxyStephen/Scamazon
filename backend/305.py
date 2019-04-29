@@ -208,7 +208,7 @@ def get_items():
 
     return jsonify(success=True, items=out), 200
 
-@app.route('/get_payments', methods=['GET'])
+@app.route('/get_payments', methods=['GET', 'POST'])
 def get_payments():
     req = request.get_json()
     user = '"{}"'.format(req.get('user'))
@@ -225,7 +225,7 @@ def get_payments():
 
     return jsonify(success=True, addresses=out), 200
 
-@app.route('/get_addresses', methods=['GET'])
+@app.route('/get_addresses', methods=['GET', 'POST'])
 def get_addresses():
     req = request.get_json()
     user = '"{}"'.format(req.get('user'))
@@ -242,7 +242,7 @@ def get_addresses():
 
     return jsonify(success=True, addresses=out), 200
 
-@app.route('/get_reviews', methods=['GET'])
+@app.route('/get_reviews', methods=['GET', 'POST'])
 def get_reviews():
     req = request.get_json()
     rtype = req.get('type')
@@ -286,7 +286,7 @@ def get_listings():
 
     return jsonify(success=True, listings=out), 200
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     req = request.get_json()
     email = '"{}"'.format(req.get('email'))
