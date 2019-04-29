@@ -78,7 +78,7 @@ CREATE TABLE Address (
 CREATE TABLE Payment (
 	PaymentID INT AUTO_INCREMENT,
 	PaymentType VARCHAR(20) NOT NULL,
-	PaymentKey INT NOT NULL,
+	PaymentKey VARCHAR(30) NOT NULL,
 	ExpirationDate DATE,
 	CVV INT,
 	BillingAddress INT,
