@@ -27,3 +27,18 @@ def listing(Item, Seller, Quantity, Price):
     return '''
     INSERT INTO listing(Item, Seller, Quantity, Price) VALUES ({}, {}, {}, {})
     '''.format(Item, Seller, Quantity, Price)
+
+def address(RecipientName, Address, City, State, Country, Zip, UserID):
+    return '''
+    INSERT INTO address(RecipientName, Address, City, State, Country, Zip, UserID) VALUES ({}, {}, {}, {}, {}, {}, {})
+    '''.format(RecipientName, Address, City, State, Country, Zip, UserID)
+
+def item_review(Rating, Title, Body, Customer, ItemID):
+    return '''
+    INSERT INTO review(Rating, Title, Body, Customer, ItemID) VALUES ({}, {}, {}, {}, {})
+    '''.format(Rating, Title, Body, Customer, ItemID)
+
+def seller_review(Rating, Title, Body, Customer, Seller):
+    return '''
+    INSERT INTO review(Rating, Title, Body, Customer, Seller) VALUES ({}, {}, {}, {}, {})
+    '''.format(Rating, Title, Body, Customer, Seller)

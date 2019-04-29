@@ -9,26 +9,51 @@ def sellers():
     '''
 
 def categories():
-    return'''
+    return '''
     SELECT CategoryName FROM category
     '''
 
 def items():
-    return'''
+    return '''
     SELECT ItemID, ItemName, Summary, Manufacturer, Category FROM item
     '''
 
 def listings():
-    return'''
+    return '''
     SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email
     '''
 
+def addresses(User):
+    return '''
+    SELECT AddressID, RecipientName, Address, City, State, Country, Zip FROM address a WHERE a.UserID={}
+    '''.format(User)
+
+def item_reviews(ItemID):
+    return '''
+    SELECT Rating, Title, Body, Customer FROM review WHERE ItemID={}
+    '''.format(ItemID)
+
+def seller_reviews(Seller):
+    return '''
+    SELECT Rating, Title, Body, Customer FROM review WHERE Seller={}
+    '''.format(Seller)
+
+def item_review_avg(ItemID):
+    return '''
+    SELECT AVG(Rating) FROM review WHERE ItemID={}
+    '''.format(ItemID)
+
+def seller_review_avg(Seller):
+    return '''
+    SELECT AVG(Rating) FROM review WHERE Seller={}
+    '''.format(Seller)
+
 def user_exists(Email):
-    return'''
+    return '''
     SELECT COUNT(*) FROM users WHERE Email={}
     '''.format(Email)
 
 def password_matches(Email, Password):
-    return'''
+    return '''
     SELECT COUNT(*) FROM users WHERE Email={} AND PW={}
     '''.format(Email, Password)

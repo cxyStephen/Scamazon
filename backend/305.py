@@ -79,9 +79,8 @@ def create_item():
     req = request.get_json()
     name = '"{}"'.format(req.get('name'))
     desc = '"{}"'.format(req.get('desc', 'NULL'))
-    print(desc)
-    manufacturer = req.get('manufacturer')
-    category = req.get('category')
+    manufacturer = '"{}"'.format(req.get('manufacturer'))
+    category = '"{}"'.format(req.get('category'))
 
     try:
         query.execute(insert.item(name, desc, manufacturer, category))
@@ -103,7 +102,48 @@ def create_listing():
     except Exception as e:
         return error_response(e)
     
-    return jsonify(success=True, message="successfully created new listing for " + quantity + " of item #" + item + " for " + price + "cents each by seller " + seller), 200
+    return jsonify(success=True, message="successfully created new listing for " + str(quantity) + " of item #" + str(item) + " for " + str(price) + " cents each by seller " + seller), 200
+
+@app.route('/create_address', methods=['POST'])
+def create_address():
+    req = request.get_json()
+    name =    '"{}"'.format(req.get('name'))
+    address = '"{}"'.format(req.get('address'))
+    city =    '"{}"'.format(req.get('city'))
+    state =   '"{}"'.format(req.get('state'))
+    country = '"{}"'.format(req.get('country'))
+    zipcode =               req.get('zip')
+    user =    '"{}"'.format(req.get('user'))
+
+    try:
+        query.execute(insert.address(name, address, city, state, country, zipcode, user))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new address for " + name), 200
+
+@app.route('/create_review', methods=['POST'])
+def create_review():
+    req = request.get_json()
+    rating =               req.get('rating')
+    title =  '"{}"'.format(req.get('title'))
+    desc =   '"{}"'.format(req.get('desc'))
+    user =   '"{}"'.format(req.get('user'))
+
+    rtype = req.get('type')
+    rid =   req.get('id')
+
+    try:
+        if (rtype == 'item'):
+            query.execute(insert.item_review(rating, title, desc, user, rid))
+        elif (rtype == 'seller'):
+            query.execute(insert.seller_review(rating, title, desc, user, '"{}"'.format(rid)))
+        else:
+            return error_response("invalid review type")
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new " + str(rtype) + " review for " + str(rid)), 200
 
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
@@ -140,10 +180,57 @@ def get_items():
 
     out = []
     for val in query:
-        out.append({'item_id': val[0], 'name': val[1],  'desc': val[2],
-                    'manufacturer': val[3],  'category': val[4]})
+        out.append({'item_id': val[0], 'name': val[1], 'desc': val[2],
+                    'manufacturer': val[3], 'category': val[4]})
 
     return jsonify(success=True, items=out), 200
+
+@app.route('/get_addresses', methods=['GET'])
+def get_addresses():
+    req = request.get_json()
+    user = '"{}"'.format(req.get('user'))
+
+    try:
+        query.execute(select.addresses(user))    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append({'address_id': val[0], 'name': val[1], 'address': val[2],
+                    'city': val[3], 'state': val[4], 'country': val[5], 'zip': val[6]})
+
+    return jsonify(success=True, addresses=out), 200
+
+@app.route('/get_reviews', methods=['GET'])
+def get_reviews():
+    req = request.get_json()
+    rtype = req.get('type')
+    rid   = req.get('id')
+    
+    out = []
+    avg = 0.0
+    try:
+        if (rtype == 'item'):
+            query.execute(select.item_reviews(rid))
+        elif (rtype == 'seller'):
+            query.execute(select.seller_reviews('"{}"'.format(rid)))
+        else:
+            return error_response("invalid review type")
+
+        for val in query:
+            out.append({'rating': val[0], 'title': val[1], 'desc': val[2], 'user': val[3]})
+
+        if (rtype == 'item'):
+            query.execute(select.item_review_avg(rid))
+        elif (rtype == 'seller'):
+            query.execute(select.seller_review_avg('"{}"'.format(rid)))
+
+        avg = query.fetchone()[0]
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, reviews=out, average_rating=float(avg)), 200
 
 @app.route('/get_listings', methods=['GET'])
 def get_listings():
