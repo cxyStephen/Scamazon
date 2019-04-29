@@ -17,3 +17,8 @@ def seller(Email, DisplayName):
     return '''
     INSERT INTO seller(Email, DisplayName) VALUES ({}, {})
     '''.format(Email, DisplayName)
+
+def item(ItemName, Summary, Manufacturer, Category):
+    return '''
+    INSERT INTO item(ItemName, Summary, Manufacturer, Category) VALUES ({}, {}, {}, {})
+    '''.format(ItemName, Summary, Manufacturer, Category)

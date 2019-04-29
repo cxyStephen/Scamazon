@@ -74,6 +74,21 @@ def create_seller():
     
     return jsonify(success=True, message="successfully created new seller " + name), 200
 
+@app.route('/create_item', methods=['POST'])
+def create_item():
+    req = request.args
+    name = req.get('name')
+    desc = req.get('desc')
+    manufacturer = req.get('manufacturer')
+    category = req.get('category')
+
+    try:
+        query.execute(insert.item(name, desc, manufacturer, category))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new item " + name), 200
+
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
     try:
@@ -86,6 +101,33 @@ def get_sellers():
         out.append({'display_name': val[0], 'email': val[1]})
 
     return jsonify(success=True, sellers=out), 200
+
+@app.route('/get_categories', methods=['GET'])
+def get_categories():
+    try:
+        query.execute(select.categories())    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append(val[0])
+
+    return jsonify(success=True, categories=out), 200
+
+@app.route('/get_items', methods=['GET'])
+def get_items():
+    try:
+        query.execute(select.items())    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append({'item_id': val[0], 'name': val[1],  'desc': val[2],
+                    'manufacturer': val[3],  'category': val[4]})
+
+    return jsonify(success=True, items=out), 200
 
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500
