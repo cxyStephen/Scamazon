@@ -159,5 +159,25 @@ def get_listings():
 
     return jsonify(success=True, listings=out), 200
 
+@app.route('/login', methods=['GET'])
+def login():
+    req = request.get_json()
+    email = '"{}"'.format(req.get('email'))
+    pw =    '"{}"'.format(req.get('pw'))
+
+    try:
+        query.execute(select.user_exists(email))
+        if (query.fetchone()[0] == 0):
+            return error_response("no such user " + email)
+        query.execute(select.password_matches(email, pw))
+        if (query.fetchone()[0] == 0):
+            return error_response("incorrect password")
+        
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, message="successfully logged in " + email)
+
+
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500
