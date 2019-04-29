@@ -78,7 +78,8 @@ def create_seller():
 def create_item():
     req = request.args
     name = req.get('name')
-    desc = req.get('desc')
+    desc = req.get('desc', 'NULL')
+    print(desc)
     manufacturer = req.get('manufacturer')
     category = req.get('category')
 
@@ -88,6 +89,21 @@ def create_item():
         return error_response(e)
     
     return jsonify(success=True, message="successfully created new item " + name), 200
+
+@app.route('/create_listing', methods=['POST'])
+def create_listing():
+    req = request.args
+    item = req.get('item')
+    seller = req.get('seller')
+    quantity = req.get('quantity')
+    price = req.get('price')
+
+    try:
+        query.execute(insert.listing(item, seller, quantity, price))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new listing for " + quantity + " of item #" + item + " for " + price + "cents each by seller " + seller), 200
 
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
@@ -128,6 +144,20 @@ def get_items():
                     'manufacturer': val[3],  'category': val[4]})
 
     return jsonify(success=True, items=out), 200
+
+@app.route('/get_listings', methods=['GET'])
+def get_listings():
+    try:
+        query.execute(select.listings())    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append({'item_name': val[0], 'item_id': val[1],  'price': val[2],
+                    'seller_name': val[3],  'seller_id': val[4], 'quantity': val[5]})
+
+    return jsonify(success=True, listings=out), 200
 
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500

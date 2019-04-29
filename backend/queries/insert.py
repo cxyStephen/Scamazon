@@ -22,3 +22,8 @@ def item(ItemName, Summary, Manufacturer, Category):
     return '''
     INSERT INTO item(ItemName, Summary, Manufacturer, Category) VALUES ({}, {}, {}, {})
     '''.format(ItemName, Summary, Manufacturer, Category)
+
+def listing(Item, Seller, Quantity, Price):
+    return '''
+    INSERT INTO listing(Item, Seller, Quantity, Price) VALUES ({}, {}, {}, {})
+    '''.format(Item, Seller, Quantity, Price)
