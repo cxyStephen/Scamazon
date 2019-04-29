@@ -33,9 +33,9 @@ def hello_world():
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
-    req = request.args
-    email = req.get('email')
-    pw = req.get('pw')
+    req = request.get_json()
+    email = '"{}"'.format(req.get('email'))
+    pw =    '"{}"'.format(req.get('pw'))
 
     try:
         query.execute(insert.users(email, pw))
@@ -46,10 +46,10 @@ def create_user():
 
 @app.route('/create_customer', methods=['POST'])
 def create_customer():
-    req = request.args
-    name1 = req.get('fname')
-    name2 = req.get('lname')
-    email = req.get('email')
+    req = request.get_json()
+    name1 = '"{}"'.format(req.get('fname'))
+    name2 = '"{}"'.format(req.get('lname'))
+    email = '"{}"'.format(req.get('email'))
 
     try:
         query.execute(insert.shoppingcart())
@@ -63,9 +63,9 @@ def create_customer():
 
 @app.route('/create_seller', methods=['POST'])
 def create_seller():
-    req = request.args
-    name = req.get('name')
-    email = req.get('email')
+    req = request.get_json()
+    name =  '"{}"'.format(req.get('name'))
+    email = '"{}"'.format(req.get('email'))
 
     try:
         query.execute(insert.seller(email, name))
@@ -76,9 +76,9 @@ def create_seller():
 
 @app.route('/create_item', methods=['POST'])
 def create_item():
-    req = request.args
-    name = req.get('name')
-    desc = req.get('desc', 'NULL')
+    req = request.get_json()
+    name = '"{}"'.format(req.get('name'))
+    desc = '"{}"'.format(req.get('desc', 'NULL'))
     print(desc)
     manufacturer = req.get('manufacturer')
     category = req.get('category')
@@ -92,9 +92,9 @@ def create_item():
 
 @app.route('/create_listing', methods=['POST'])
 def create_listing():
-    req = request.args
+    req = request.get_json()
     item = req.get('item')
-    seller = req.get('seller')
+    seller = '"{}"'.format(req.get('seller'))
     quantity = req.get('quantity')
     price = req.get('price')
 
