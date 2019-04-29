@@ -208,9 +208,9 @@ def get_items():
 
     return jsonify(success=True, items=out), 200
 
-@app.route('/get_payments', methods=['GET', 'POST'])
+@app.route('/get_payments', methods=['GET'])
 def get_payments():
-    req = request.get_json()
+    req = request.args
     user = '"{}"'.format(req.get('user'))
 
     try:
@@ -225,9 +225,9 @@ def get_payments():
 
     return jsonify(success=True, addresses=out), 200
 
-@app.route('/get_addresses', methods=['GET', 'POST'])
+@app.route('/get_addresses', methods=['GET'])
 def get_addresses():
-    req = request.get_json()
+    req = request.args
     user = '"{}"'.format(req.get('user'))
 
     try:
@@ -242,9 +242,9 @@ def get_addresses():
 
     return jsonify(success=True, addresses=out), 200
 
-@app.route('/get_reviews', methods=['GET', 'POST'])
+@app.route('/get_reviews', methods=['GET'])
 def get_reviews():
-    req = request.get_json()
+    req = request.args
     rtype = req.get('type')
     rid   = req.get('id')
     
@@ -271,6 +271,30 @@ def get_reviews():
         return error_response(e)
 
     return jsonify(success=True, reviews=out, average_rating=float(avg)), 200
+
+@app.route('/get_all_reviews', methods=['GET'])
+def get_all_reviews():
+    req = request.args
+    rtype = req.get('type', 'NULL')
+
+    out = []
+    try:
+        if (rtype == 'item'):
+            query.execute(select.all_reviews('ItemID'))
+        elif (rtype == 'seller'):
+            query.execute(select.all_reviews('Seller'))
+        elif (rtype == 'NULL'):
+            query.execute(select.all_reviews('NULL'))
+        else:
+            return error_response("invalid review type")
+    except Exception as e:
+        return error_response(e)
+
+    for val in query:
+        out.append({'rating': val[0], 'title': val[1], 'desc': val[2],
+                    'user': val[3], 'item_id': val[4], 'seller': val[5]})
+
+    return jsonify(success=True, reviews=out), 200
 
 @app.route('/get_listings', methods=['GET'])
 def get_listings():

@@ -33,6 +33,16 @@ def addresses(User):
     SELECT AddressID, RecipientName, Address, City, State, Country, Zip FROM address a WHERE a.UserID={}
     '''.format(User)
 
+def all_reviews(Type):
+    if (Type != 'NULL'):
+        return '''
+        SELECT Rating, Title, Body, Customer, ItemID, Seller FROM review WHERE {} IS NOT NULL
+        '''.format(Type)
+    else:
+        return '''
+        SELECT Rating, Title, Body, Customer, ItemID, Seller FROM review
+        '''
+
 def item_reviews(ItemID):
     return '''
     SELECT Rating, Title, Body, Customer FROM review WHERE ItemID={}
