@@ -78,9 +78,12 @@ def create_seller():
 def create_item():
     req = request.get_json()
     name = '"{}"'.format(req.get('name'))
-    desc = '"{}"'.format(req.get('desc', 'NULL'))
+    desc = req.get('desc', 'NULL')
     manufacturer = '"{}"'.format(req.get('manufacturer'))
     category = '"{}"'.format(req.get('category'))
+
+    if (desc != 'NULL'):
+        desc = '"{}"'.format(desc)
 
     try:
         query.execute(insert.item(name, desc, manufacturer, category))
@@ -103,6 +106,26 @@ def create_listing():
         return error_response(e)
     
     return jsonify(success=True, message="successfully created new listing for " + str(quantity) + " of item #" + str(item) + " for " + str(price) + " cents each by seller " + seller), 200
+
+@app.route('/create_payment', methods=['POST'])
+def create_payment():
+    req = request.get_json()
+    ptype =   '"{}"'.format(req.get('type'))
+    key =     '"{}"'.format(req.get('key'))
+    exp =                   req.get('exp', 'NULL')
+    cvv =                   req.get('cvv', 'NULL')
+    billing =               req.get('billing', 'NULL')
+    user =    '"{}"'.format(req.get('user'))
+
+    if (exp != 'NULL'):
+        exp = '"{}"'.format(exp)
+
+    try:
+        query.execute(insert.payment(ptype, key, exp, cvv, billing, user))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new payment for " + user), 200
 
 @app.route('/create_address', methods=['POST'])
 def create_address():
@@ -184,6 +207,23 @@ def get_items():
                     'manufacturer': val[3], 'category': val[4]})
 
     return jsonify(success=True, items=out), 200
+
+@app.route('/get_payments', methods=['GET'])
+def get_payments():
+    req = request.get_json()
+    user = '"{}"'.format(req.get('user'))
+
+    try:
+        query.execute(select.payments(user))    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append({'payment_id': val[0], 'payment_type': val[1], 'payment_key': val[2],
+                    'exp_date': val[3], 'cvv': val[4], 'billing_address': val[5]})
+
+    return jsonify(success=True, addresses=out), 200
 
 @app.route('/get_addresses', methods=['GET'])
 def get_addresses():

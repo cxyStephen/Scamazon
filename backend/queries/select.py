@@ -23,6 +23,11 @@ def listings():
     SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email
     '''
 
+def payments(User):
+    return '''
+    SELECT PaymentID, PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress FROM payment p WHERE p.UserID={}
+    '''.format(User)
+
 def addresses(User):
     return '''
     SELECT AddressID, RecipientName, Address, City, State, Country, Zip FROM address a WHERE a.UserID={}

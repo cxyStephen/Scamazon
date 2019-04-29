@@ -28,6 +28,13 @@ def listing(Item, Seller, Quantity, Price):
     INSERT INTO listing(Item, Seller, Quantity, Price) VALUES ({}, {}, {}, {})
     '''.format(Item, Seller, Quantity, Price)
 
+def payment(PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress, UserID):
+    if(ExpirationDate != 'NULL'):
+        ExpirationDate = "STR_TO_DATE({}, '%m/%Y')".format(ExpirationDate)
+    return '''
+    INSERT INTO payment(PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress, UserID) VALUES ({}, {}, {}, {}, {}, {})
+    '''.format(PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress, UserID)
+
 def address(RecipientName, Address, City, State, Country, Zip, UserID):
     return '''
     INSERT INTO address(RecipientName, Address, City, State, Country, Zip, UserID) VALUES ({}, {}, {}, {}, {}, {}, {})
