@@ -8,7 +8,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar isLoggedIn={this.state.loggedIn} onLogout={this.handleLogout} />
+        <NavBar
+          isLoggedIn={this.state.email.length > 0}
+          onLogout={this.handleLogout}
+        />
         <div>Current user is: {this.state.email}</div>
         <Button variant="primary" onClick={() => this.test()}>
           Test
@@ -20,7 +23,13 @@ class App extends Component {
     );
   }
 
-  state = { loggedIn: false, email: "" };
+  componentWillMount() {
+    const lsEmail = localStorage.getItem("email");
+    if (lsEmail) this.setState({ email: lsEmail });
+    console.log("lsEmail: " + lsEmail);
+  }
+
+  state = { email: "" };
 
   test() {
     //this.setState({ redirect: true });
@@ -28,11 +37,13 @@ class App extends Component {
   }
 
   handleLogin = email => {
-    this.setState({ loggedIn: true, email: email });
+    this.setState({ email: email });
+    localStorage.setItem("email", email);
     this.props.history.push("/");
   };
   handleLogout = () => {
-    this.setState({ loggedIn: false, email: "" });
+    this.setState({ email: "" });
+    localStorage.setItem("email", "");
     this.props.history.push("/");
   };
 }
