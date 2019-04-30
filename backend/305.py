@@ -359,7 +359,7 @@ def get_cart():
     for val in query:
         out.append({'item_id': val[0], 'item_name': val[1],  'seller': val[2],
                     'quantity': val[3],  'price': val[4]})
-        price += val[4]
+        price += val[4] * val[3]
 
     return jsonify(success=True, contents=out, subtotal=price), 200
 
