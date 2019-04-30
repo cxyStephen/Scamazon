@@ -20,7 +20,7 @@ class Main extends Component {
           <Route
             exact
             path="/user/type"
-            render={props => <UserType {...props} testProp={true} />} // this is how u pass props using Route
+            render={props => <UserType {...props} email={this.props.email} />} // this is how u pass props using Route
           />
         </Switch>
       </main>

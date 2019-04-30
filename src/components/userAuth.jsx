@@ -58,18 +58,10 @@ class userAuth extends Component {
             <div onClick={this.handleSignInText} className="m-2">
               {this.state.registerText}
             </div>
-            <Button variant="primary" onClick={() => this.test()}>
-              Test
-            </Button>
           </Form>
         </Row>
       </Container>
     );
-  }
-
-  test() {
-    //this.setState({ redirect: true });
-    this.props.history.push("/user/type");
   }
 
   handleSignInText = () => {
@@ -88,7 +80,6 @@ class userAuth extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.state.isRegister);
     if (!this.validateForm()) return;
     const data = JSON.stringify({
       email: this.state.email,
@@ -108,9 +99,9 @@ class userAuth extends Component {
       .then(response => {
         console.log(response.success + "\n" + response.message);
         if (response.success) {
+          this.props.onLogin(this.state.email);
           if (!this.state.isRegister) {
             this.setState({ loggedIn: true });
-            this.props.onLogin(this.state.email);
           } else this.props.history.push("/user/type");
         } else {
           this.setState({ error: response.message });

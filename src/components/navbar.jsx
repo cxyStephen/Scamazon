@@ -17,13 +17,14 @@ class NavBar extends Component {
       );
     return (
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="/marketplace">Scamazon</Navbar.Brand>
+        <Navbar.Brand href="/">Scamazon</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href="/user">Sign up</Nav.Link>
             {button}
           </Nav>
+          <Button>Cart</Button>
         </Navbar.Collapse>
       </Navbar>
     );
