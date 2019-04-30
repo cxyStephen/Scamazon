@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
-from queries import insert, select
+from queries import insert, select, update
 
 import mysql.connector
 
@@ -341,6 +341,28 @@ def get_listings():
 
     return jsonify(success=True, listings=out), 200
 
+@app.route('/get_cart', methods=['GET'])
+def get_cart():
+    query = g.cursor
+    req = request.args
+    user = '"{}"'.format(req.get('user'))
+
+    try:
+        query.execute(select.user_cart(user))
+        cart_id = query.fetchone()[0]
+        query.execute(select.cart_contents(cart_id))
+    except Exception as e:
+        return error_response(e)
+        
+    out = []
+    price = 0
+    for val in query:
+        out.append({'item_id': val[0], 'item_name': val[1],  'seller': val[2],
+                    'quantity': val[3],  'price': val[4]})
+        price += val[4]
+
+    return jsonify(success=True, contents=out, subtotal=price), 200
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     query = g.cursor
@@ -361,6 +383,53 @@ def login():
 
     return jsonify(success=True, message="successfully logged in " + email)
 
+@app.route('/add_to_cart', methods=['POST'])
+def add_to_cart():
+    query = g.cursor
+    req = request.get_json()
+    email =  '"{}"'.format(req.get('email'))
+    item =                 req.get('item')
+    seller = '"{}"'.format(req.get('seller'))
+    quantity =             req.get('quantity')
+
+    try:
+        query.execute(select.check_stock(item, seller))
+        if (query.fetchone()[0] < quantity):
+            return error_response(seller + " does not have enough " + str(item) + " in stock.")
+        query.execute(select.user_cart(email))
+        cart_id = query.fetchone()[0]
+        query.execute(insert.add_to_cart(cart_id, item, seller, quantity))
+        
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, message="successfully added " + str(quantity) + " of item "+ str(item) + " sold by " + seller + " to " + email +"'s cart")
+
+@app.route('/modify_cart', methods=['POST'])
+def modify_cart():
+    query = g.cursor
+    req = request.get_json()
+    email =  '"{}"'.format(req.get('email'))
+    item =                 req.get('item')
+    seller = '"{}"'.format(req.get('seller'))
+    quantity =             req.get('quantity')
+
+    try:
+        query.execute(select.check_stock(item, seller))
+        if (query.fetchone()[0] < quantity):
+            return error_response(seller + " does not have enough " + str(item) + " in stock.")
+        query.execute(select.user_cart(email))
+        cart_id = query.fetchone()[0]
+
+        if (quantity == 0):
+            query.execute(update.remove_from_cart(cart_id, item, seller))
+        else:
+            query.execute(update.change_quantity(cart_id, item, seller, quantity))
+        
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, message="successfully changed quantity of item "+ str(item) + " sold by " + seller + " in " + email +"'s cart to " + str(quantity))
 
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500

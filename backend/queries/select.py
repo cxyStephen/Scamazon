@@ -72,3 +72,20 @@ def password_matches(Email, Password):
     return '''
     SELECT COUNT(*) FROM users WHERE Email={} AND PW={}
     '''.format(Email, Password)
+
+def check_stock(Item, Seller):
+    return '''
+    SELECT Quantity FROM listing WHERE Item={} AND Seller={}
+    '''.format(Item, Seller)
+
+def user_cart(Email):
+    return '''
+    SELECT CurrentCart FROM customer WHERE Email={}
+    '''.format(Email)
+
+def cart_contents(CartID):
+    return '''
+    SELECT s.Item, i.ItemName, s.Seller, s.Quantity, l.Price
+        FROM shoppingcartcontents s JOIN listing l ON s.item=l.item AND s.seller=l.seller
+            JOIN item i ON s.item = i.ItemID WHERE s.CartID={}
+    '''.format(CartID)

@@ -49,3 +49,8 @@ def seller_review(Rating, Title, Body, Customer, Seller):
     return '''
     INSERT INTO review(Rating, Title, Body, Customer, Seller) VALUES ({}, {}, {}, {}, {})
     '''.format(Rating, Title, Body, Customer, Seller)
+
+def add_to_cart(CartID, Item, Seller, Quantity):
+    return '''
+    INSERT INTO shoppingcartcontents(CartID, Item, Seller, Quantity) VALUES ({}, {}, {}, {})
+    '''.format(CartID, Item, Seller, Quantity)
