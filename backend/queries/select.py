@@ -13,6 +13,11 @@ def categories():
     SELECT CategoryName FROM category
     '''
 
+def shiptypes():
+    return '''
+    SELECT Company, Speed, Price FROM shiptype
+    '''
+
 def items():
     return '''
     SELECT ItemID, ItemName, Summary, Manufacturer, Category FROM item

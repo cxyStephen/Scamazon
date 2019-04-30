@@ -219,6 +219,20 @@ def get_categories():
 
     return jsonify(success=True, categories=out), 200
 
+@app.route('/get_shiptypes', methods=['GET'])
+def get_shiptypes():
+    query = g.cursor
+    try:
+        query.execute(select.shiptypes())    
+    except Exception as e:
+        return error_response(e)
+
+    out = []
+    for val in query:
+        out.append({'company': val[0], 'speed': val[1], 'price': val[2]})
+
+    return jsonify(success=True, shiptypes=out), 200
+
 @app.route('/get_items', methods=['GET'])
 def get_items():
     query = g.cursor
@@ -422,14 +436,33 @@ def modify_cart():
         cart_id = query.fetchone()[0]
 
         if (quantity == 0):
-            query.execute(update.remove_from_cart(cart_id, item, seller))
+            query.execute(update.cart_remove(cart_id, item, seller))
         else:
-            query.execute(update.change_quantity(cart_id, item, seller, quantity))
+            query.execute(update.cart_quantity(cart_id, item, seller, quantity))
         
     except Exception as e:
         return error_response(e)
 
     return jsonify(success=True, message="successfully changed quantity of item "+ str(item) + " sold by " + seller + " in " + email +"'s cart to " + str(quantity))
+
+@app.route('/modify_listing', methods=['POST'])
+def modify_listing():
+    query = g.cursor
+    req = request.get_json()
+    item =                 req.get('item')
+    seller = '"{}"'.format(req.get('seller'))
+    quantity =             req.get('quantity')
+    price =                req.get('price')
+    
+    try:
+        if (quantity == 0):
+            query.execute(update.listing_remove(item, seller))
+        else:
+            query.execute(update.listing(item, seller, quantity, price))
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, message="successfully changed quantity and price of item " + str(item) + " sold by " + seller + " to " + str(quantity) + " and " + str(price))
 
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500
