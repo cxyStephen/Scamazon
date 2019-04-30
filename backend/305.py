@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 from queries import insert, select
 
@@ -7,22 +7,37 @@ import mysql.connector
 app = Flask(__name__)
 CORS(app)
 
-database = mysql.connector.connect(
-        database="305",
-        host="localhost",
-        user="root",
-        passwd="password"
-    )
-query = database.cursor()
+def connect_db():
+    if not hasattr(g, 'database'):
+        g.database = mysql.connector.connect(
+            database="305",
+            host="localhost",
+            user="root",
+            passwd="password"
+        )
+        g.cursor = g.database.cursor()
+    return g.database
+
+@app.before_request
+def before_request():
+  g.database = connect_db()
 
 @app.after_request
 def after_request(response):
-    if query is not None:
-        database.commit()
+    if g.cursor is not None:
+        g.database.commit()
+        g.cursor.close()
     return response
+
+@app.teardown_request
+def teardown_request(exception):
+    database = getattr(g, 'database', None)
+    if database is not None:
+        database.close()
 
 @app.route('/')
 def hello_world():
+    query = g.cursor
     query.execute('SHOW TABLES')
 
     out = 'Tables: '
@@ -33,6 +48,7 @@ def hello_world():
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
+    query = g.cursor
     req = request.get_json()
     email = '"{}"'.format(req.get('email'))
     pw =    '"{}"'.format(req.get('pw'))
@@ -46,6 +62,7 @@ def create_user():
 
 @app.route('/create_customer', methods=['POST'])
 def create_customer():
+    query = g.cursor
     req = request.get_json()
     name1 = '"{}"'.format(req.get('fname'))
     name2 = '"{}"'.format(req.get('lname'))
@@ -63,6 +80,7 @@ def create_customer():
 
 @app.route('/create_seller', methods=['POST'])
 def create_seller():
+    query = g.cursor
     req = request.get_json()
     name =  '"{}"'.format(req.get('name'))
     email = '"{}"'.format(req.get('email'))
@@ -76,6 +94,7 @@ def create_seller():
 
 @app.route('/create_item', methods=['POST'])
 def create_item():
+    query = g.cursor
     req = request.get_json()
     name = '"{}"'.format(req.get('name'))
     desc = req.get('desc', 'NULL')
@@ -94,6 +113,7 @@ def create_item():
 
 @app.route('/create_listing', methods=['POST'])
 def create_listing():
+    query = g.cursor
     req = request.get_json()
     item = req.get('item')
     seller = '"{}"'.format(req.get('seller'))
@@ -109,6 +129,7 @@ def create_listing():
 
 @app.route('/create_payment', methods=['POST'])
 def create_payment():
+    query = g.cursor
     req = request.get_json()
     ptype =   '"{}"'.format(req.get('type'))
     key =     '"{}"'.format(req.get('key'))
@@ -129,6 +150,7 @@ def create_payment():
 
 @app.route('/create_address', methods=['POST'])
 def create_address():
+    query = g.cursor
     req = request.get_json()
     name =    '"{}"'.format(req.get('name'))
     address = '"{}"'.format(req.get('address'))
@@ -147,6 +169,7 @@ def create_address():
 
 @app.route('/create_review', methods=['POST'])
 def create_review():
+    query = g.cursor
     req = request.get_json()
     rating =               req.get('rating')
     title =  '"{}"'.format(req.get('title'))
@@ -170,6 +193,7 @@ def create_review():
 
 @app.route('/get_sellers', methods=['GET'])
 def get_sellers():
+    query = g.cursor
     try:
         query.execute(select.sellers())    
     except Exception as e:
@@ -183,6 +207,7 @@ def get_sellers():
 
 @app.route('/get_categories', methods=['GET'])
 def get_categories():
+    query = g.cursor
     try:
         query.execute(select.categories())    
     except Exception as e:
@@ -196,6 +221,7 @@ def get_categories():
 
 @app.route('/get_items', methods=['GET'])
 def get_items():
+    query = g.cursor
     try:
         query.execute(select.items())    
     except Exception as e:
@@ -210,6 +236,7 @@ def get_items():
 
 @app.route('/get_payments', methods=['GET'])
 def get_payments():
+    query = g.cursor
     req = request.args
     user = '"{}"'.format(req.get('user'))
 
@@ -227,6 +254,7 @@ def get_payments():
 
 @app.route('/get_addresses', methods=['GET'])
 def get_addresses():
+    query = g.cursor
     req = request.args
     user = '"{}"'.format(req.get('user'))
 
@@ -244,6 +272,7 @@ def get_addresses():
 
 @app.route('/get_reviews', methods=['GET'])
 def get_reviews():
+    query = g.cursor
     req = request.args
     rtype = req.get('type')
     rid   = req.get('id')
@@ -274,6 +303,7 @@ def get_reviews():
 
 @app.route('/get_all_reviews', methods=['GET'])
 def get_all_reviews():
+    query = g.cursor
     req = request.args
     rtype = req.get('type', 'NULL')
 
@@ -298,6 +328,7 @@ def get_all_reviews():
 
 @app.route('/get_listings', methods=['GET'])
 def get_listings():
+    query = g.cursor
     try:
         query.execute(select.listings())    
     except Exception as e:
@@ -312,6 +343,7 @@ def get_listings():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    query = g.cursor
     req = request.get_json()
     email = '"{}"'.format(req.get('email'))
     pw =    '"{}"'.format(req.get('pw'))
