@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import UserAuth from "./userAuth";
 import UserType from "./userType";
 import MarketPlace from "./marketPlace";
+import AccountPage from "./accountPage";
 
 class Main extends Component {
   render() {
@@ -14,7 +15,18 @@ class Main extends Component {
             exact
             path="/user"
             render={props => (
-              <UserAuth {...props} onLogin={this.props.onLogin} />
+              <UserAuth
+                {...props}
+                onLogin={this.props.onLogin}
+                email={this.props.email}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/user/account"
+            render={props => (
+              <AccountPage {...props} email={this.props.email} />
             )}
           />
           <Route

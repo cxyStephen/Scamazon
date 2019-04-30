@@ -29,6 +29,7 @@ class App extends Component {
 
   handleLogin = email => {
     this.setState({ loggedIn: true, email: email });
+    this.props.history.push("/");
   };
   handleLogout = () => {
     this.setState({ loggedIn: false, email: "" });

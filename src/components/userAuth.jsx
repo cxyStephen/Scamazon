@@ -22,9 +22,8 @@ class userAuth extends Component {
   }
 
   render() {
-    if (this.state.loggedIn) {
-      return <Redirect to="/" />;
-    }
+    if (this.props.email.length > 0) return <Redirect to="/user/account" />;
+
     let errorAlert;
     if (this.state.error.length > 0)
       errorAlert = <Alert variant="danger">{this.state.error}</Alert>;
