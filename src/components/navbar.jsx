@@ -15,13 +15,16 @@ class NavBar extends Component {
           Logout
         </Button>
       );
+    else {
+      button = null;
+    }
     return (
       <Navbar bg="light" expand="lg">
         <Navbar.Brand href="/">Scamazon</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="/user">Sign up</Nav.Link>
+            <Nav.Link href="/user">Account</Nav.Link>
             {button}
           </Nav>
           <Button>Cart</Button>

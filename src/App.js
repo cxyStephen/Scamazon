@@ -31,7 +31,7 @@ class App extends Component {
     this.setState({ loggedIn: true, email: email });
   };
   handleLogout = () => {
-    this.setState({ email: "" });
+    this.setState({ loggedIn: false, email: "" });
     this.props.history.push("/");
   };
 }
