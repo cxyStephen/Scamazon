@@ -420,7 +420,7 @@ def add_to_cart():
 
     return jsonify(success=True, message="successfully added " + str(quantity) + " of item "+ str(item) + " sold by " + seller + " to " + email +"'s cart")
 
-@app.route('/modify_cart', methods=['POST'])
+@app.route('/modify_cart', methods=['PUT'])
 def modify_cart():
     query = g.cursor
     req = request.get_json()
@@ -446,7 +446,7 @@ def modify_cart():
 
     return jsonify(success=True, message="successfully changed quantity of item "+ str(item) + " sold by " + seller + " in " + email +"'s cart to " + str(quantity))
 
-@app.route('/modify_listing', methods=['POST'])
+@app.route('/modify_listing', methods=['PUT'])
 def modify_listing():
     query = g.cursor
     req = request.get_json()
@@ -464,6 +464,65 @@ def modify_listing():
         return error_response(e)
 
     return jsonify(success=True, message="successfully changed quantity and price of item " + str(item) + " sold by " + seller + " to " + str(quantity) + " and " + str(price))
+
+@app.route('/modify_payment', methods=['PUT', 'DELETE'])
+def modify_payment():
+    query = g.cursor
+    req = request.get_json()
+    pid =                   req.get('id')
+    user =    '"{}"'.format(req.get('user'))
+
+    if (request.method == 'DELETE'):
+        try:
+            query.execute(update.payment_remove(user, pid))
+        except Exception as e:
+            return error_response(e)
+        return jsonify(success=True, message="successfully deleted payment for " + user), 200
+
+    ptype =   '"{}"'.format(req.get('type'))
+    key =     '"{}"'.format(req.get('key'))
+    exp =                   req.get('exp', 'NULL')
+    cvv =                   req.get('cvv', 'NULL')
+    billing =               req.get('billing', 'NULL')
+
+    if (exp != 'NULL'):
+        exp = '"{}"'.format(exp)
+
+    try:
+        query.execute(update.payment(pid, ptype, key, exp, cvv, billing, user))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully created new payment for " + user), 200
+
+
+@app.route('/modify_address', methods=['POST', 'DELETE'])
+def modify_address():
+    query = g.cursor
+    req = request.get_json()
+    aid =                   req.get('id')
+    user =    '"{}"'.format(req.get('user'))
+
+    if (request.method == 'DELETE'):
+        try:
+            query.execute(update.address_remove(user, aid))
+        except Exception as e:
+            return error_response(e)
+        return jsonify(success=True, message="successfully deleted address for " + user), 200
+
+    name =    '"{}"'.format(req.get('name'))
+    address = '"{}"'.format(req.get('address'))
+    city =    '"{}"'.format(req.get('city'))
+    state =   '"{}"'.format(req.get('state'))
+    country = '"{}"'.format(req.get('country'))
+    zipcode =               req.get('zip')
+
+    try:
+        query.execute(update.address(aid, name, address, city, state, country, zipcode, user))
+    except Exception as e:
+        return error_response(e)
+    
+    return jsonify(success=True, message="successfully updated address for " + name), 200
 
 @app.route('/purchase_cart', methods=['POST'])
 def purchase_cart():
