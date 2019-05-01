@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import { api } from "../constants";
+import Table from "react-bootstrap/Table";
 
 class AddressPage extends Component {
   state = {
@@ -12,13 +13,12 @@ class AddressPage extends Component {
 
   componentDidMount() {
     const url = api + "/get_addresses?";
-    const query = this.props.email;
+    const query = "user=" + this.props.email;
     if (query.length === 0) return;
     fetch(url + query)
       .then(res => res.json())
       .then(response => {
-        this.setState({ addresses: response });
-        console.log(this.state.addresses);
+        this.setState({ addresses: response.addresses, isLoading: false });
         console.log(
           "get_addresses: \n" + response.success + "\n" + response.message
         );
@@ -31,10 +31,41 @@ class AddressPage extends Component {
 
   render() {
     let table;
+    if (!this.state.isLoading && this.state.addresses.length > 0) {
+      table = (
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Zip</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.addresses.map(data => {
+              return (
+                <tr key={data.address_id}>
+                  <td>{data.name}</td>
+                  <td>{data.address}</td>
+                  <td>{data.city}</td>
+                  <td>{data.state}</td>
+                  <td>{data.zip}</td>
+                  <td>{data.country}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      );
+    }
     return (
       <div>
         <div>Addresses</div>
         <NavLink to="address/new">Add an address</NavLink>
+        {table}
       </div>
     );
   }

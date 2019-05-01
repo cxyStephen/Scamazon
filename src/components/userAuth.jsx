@@ -105,9 +105,10 @@ class userAuth extends Component {
         console.log(response.success + "\n" + response.message);
         if (response.success) {
           this.props.onLogin(this.state.email);
-          if (this._isMounted && !this.state.isRegister) {
+          if (this.state.isRegister) this.props.history.push("/user/type");
+          else if (this._isMounted && !this.state.isRegister) {
             this.setState({ loggedIn: true });
-          } else this.props.history.push("/user/type");
+          }
         } else if (this._isMounted) {
           this.setState({ error: response.message });
         }

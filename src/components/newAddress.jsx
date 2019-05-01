@@ -54,6 +54,7 @@ class NewAddress extends Component {
             <Form.Group as={Col} controlId="state">
               <Form.Label>State</Form.Label>
               <Form.Control as="select" onChange={this.handleChange}>
+                <option>Choose</option>
                 <option value="AK">Alaska</option>
                 <option value="AL">Alabama</option>
                 <option value="AR">Arkansas</option>
@@ -131,6 +132,7 @@ class NewAddress extends Component {
       user: this.props.email
     });
     const url = api + "/create_address";
+    console.log(data);
     fetch(url, {
       method: "POST",
       body: data,
