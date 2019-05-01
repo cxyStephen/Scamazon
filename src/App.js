@@ -26,14 +26,13 @@ class App extends Component {
   componentWillMount() {
     const lsEmail = localStorage.getItem("email");
     if (lsEmail) this.setState({ email: lsEmail });
-    console.log("lsEmail: " + lsEmail);
   }
 
   state = { email: "" };
 
   test() {
     //this.setState({ redirect: true });
-    this.props.history.push("/user/type");
+    this.props.history.push("/user/account/type");
   }
 
   handleLogin = email => {

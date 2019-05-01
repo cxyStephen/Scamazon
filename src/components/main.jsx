@@ -4,6 +4,8 @@ import UserAuth from "./userAuth";
 import UserType from "./userType";
 import MarketPlace from "./marketPlace";
 import AccountPage from "./accountPage";
+import AddressPage from "./addressPage";
+import NewAddress from "./newAddress";
 
 class Main extends Component {
   render() {
@@ -31,8 +33,20 @@ class Main extends Component {
           />
           <Route
             exact
-            path="/user/type"
+            path="user/account/type"
             render={props => <UserType {...props} email={this.props.email} />} // this is how u pass props using Route
+          />
+          <Route
+            exact
+            path="/user/account/address"
+            render={props => (
+              <AddressPage {...props} email={this.props.email} />
+            )}
+          />
+          <Route
+            exact
+            path="/user/account/address/new"
+            render={props => <NewAddress {...props} email={this.props.email} />}
           />
         </Switch>
       </main>

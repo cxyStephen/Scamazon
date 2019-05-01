@@ -8,17 +8,24 @@ import Alert from "react-bootstrap/Alert";
 import { api } from "../constants";
 
 class userAuth extends Component {
+  state = {
+    email: "",
+    pw: "",
+    isRegister: false,
+    registerText: "I need to create an account",
+    header: "Log in",
+    loggedIn: false,
+    error: ""
+  };
+
   constructor(props) {
     super(props);
-    this.state = {
-      email: "",
-      pw: "",
-      isRegister: false,
-      registerText: "I need to create an account",
-      header: "Log in",
-      loggedIn: false,
-      error: ""
-    };
+
+    this._isMounted = false;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {
@@ -85,7 +92,6 @@ class userAuth extends Component {
       pw: this.state.pw
     });
     const url = api + (this.state.isRegister ? "/create_user" : "/login");
-    console.log(url + data);
     //console.log(this.props);
     fetch(url, {
       method: "POST",
@@ -99,10 +105,10 @@ class userAuth extends Component {
         console.log(response.success + "\n" + response.message);
         if (response.success) {
           this.props.onLogin(this.state.email);
-          if (!this.state.isRegister) {
+          if (this._isMounted && !this.state.isRegister) {
             this.setState({ loggedIn: true });
           } else this.props.history.push("/user/type");
-        } else {
+        } else if (this._isMounted) {
           this.setState({ error: response.message });
         }
       })

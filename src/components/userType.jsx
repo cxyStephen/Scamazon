@@ -18,11 +18,6 @@ class UserType extends Component {
     error: ""
   };
 
-  constructor(props) {
-    super(props);
-    if (this.props.email.length === 0) this.props.history.push("/user");
-  }
-
   render() {
     let customerForm, sellerForm;
     if (this.state.createCustomer)
