@@ -1,4 +1,4 @@
-def last_inserted_cart():
+def last_inserted():
     return '''
     SELECT LAST_INSERT_ID()
     '''
@@ -104,3 +104,4 @@ def distinct_sellers_in_cart(CartID):
     return '''
     SELECT DISTINCT Seller FROM shoppingcartcontents WHERE CartID={}
     '''.format(CartID)
+    

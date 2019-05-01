@@ -64,3 +64,4 @@ def shipment(Purchase, Seller, Company, Speed):
     return '''
     INSERT INTO shipment(Purchase, Seller, Company, Speed) VALUES ({}, {}, {}, {})
     '''.format(Purchase, Seller, Company, Speed)
+    

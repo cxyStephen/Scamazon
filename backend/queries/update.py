@@ -44,3 +44,4 @@ def payment_remove(UserID, PaymentID):
     return '''
     DELETE FROM payment WHERE UserID={} AND PaymentID={}
     '''.format(UserID, PaymentID)
+    
