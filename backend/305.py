@@ -25,7 +25,8 @@ def before_request():
 @app.after_request
 def after_request(response):
     if g.cursor is not None:
-        g.database.commit()
+        if response.status_code == 200:
+            g.database.commit()
         g.cursor.close()
     return response
 
