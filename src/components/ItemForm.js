@@ -62,7 +62,7 @@ class ItemForm extends Component {
             if (data.success) {
                 alert('A new item was created.');
             } else {
-                alert('Error: A new item was not created.');;
+                alert('Error: Could not create a new item.');;
             }
         })
         .catch(error => console.error(error));;
@@ -85,25 +85,25 @@ class ItemForm extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label>
-                            Name:
+                            Item Name:
                             <input className="form-control" name="name" type="text" value={this.state.name} onChange={this.handleInputChange}/>
                         </label>
                     </div>
                     <div className="form-group">
                         <label>
-                            Description:
+                            Item Description:
                             <textarea className="form-control" name="desc" value={this.state.description} onChange={this.handleInputChange}/>
                         </label>
                     </div>
                     <div className="form-group">
                         <label>
-                            Manufacturer:
+                            Item Manufacturer:
                             <input className="form-control" name="manufacturer" type="text" value={this.state.manufacturer} onChange={this.handleInputChange}/>
                         </label>
                     </div>
                     <div className="form-group">
                         <label>
-                            Categories:
+                            Item Category:
                             <select className="form-control" name="category" value={this.state.category} onChange={this.handleInputChange}>
                                 {categories.map(category => 
                                     <option value={category}>{category}</option>

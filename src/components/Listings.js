@@ -9,40 +9,23 @@ class Listings extends Component {
     super(props);
     this.state = {
         listings: [],
-        isLoading: false,
-        error: null
     };
   }
 
   componentDidMount() {
-    this.setState({isLoading: true});
-
     fetch(API + ENDPOINT)
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Something went wrong...')
-        }
-    })
-    .then(data => this.setState({listings: data.listings, isLoading: false}))
-    .catch(error => this.setState({error, isLoading: false}));
+    .then(response => response.json())
+    .then(data => this.setState({listings: data.listings}))
+    .catch(error => console.error(error));;
   }
 
   render() {
-    const {listings, isLoading, error} = this.state;
-
-    if (error) {
-        return <p>{error.message}</p>;
-    }
-
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
+    const {listings} = this.state;
 
     return (
     <div className="container">
         <h3>Listings</h3>
+        <h5>(what sellers are currently selling in the marketplace)</h5>
         <table className="table table-bordered table-hover table-condensed">
             <thead>
                 <tr>

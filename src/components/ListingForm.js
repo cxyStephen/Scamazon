@@ -43,7 +43,7 @@ class ListingForm extends Component {
             if (data.success) {
                 alert('A new listing was created.');
             } else {
-                alert('Error: A new listing was not created.');;
+                alert('Error: Could not create new listing.');;
             }
         })
         .catch(error => console.error(error));;
@@ -56,7 +56,7 @@ class ListingForm extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label>
-                            Item:
+                            Item ID:
                             <input className="form-control" name="item" type="text" value={this.state.item} onChange={this.handleInputChange}/>
                         </label>
                     </div>

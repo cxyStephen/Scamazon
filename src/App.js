@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import Listings from './components/Listings';
-import ListingForm from './components/ListingForm';
-import Items from './components/Items';
-import ItemForm from './components/ItemForm';
+//import SellerMarketplace from './components/SellerMarketplace';
+import CustomerMarketplace from './components/CustomerMarketplace';
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Listings />
-        <ListingForm />
-        <Items />
-        <ItemForm />
+        <CustomerMarketplace />
       </div>
     );
   }
