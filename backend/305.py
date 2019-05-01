@@ -465,5 +465,71 @@ def modify_listing():
 
     return jsonify(success=True, message="successfully changed quantity and price of item " + str(item) + " sold by " + seller + " to " + str(quantity) + " and " + str(price))
 
+@app.route('/purchase_cart', methods=['POST'])
+def purchase_cart():
+    query = g.cursor
+    req = request.get_json()
+    email = '"{}"'.format(req.get('email'))
+    payment =             req.get('payment_id')
+    address =             req.get('address_id')
+    shipc = '"{}"'.format(req.get('ship_company'))
+    ships = '"{}"'.format(req.get('ship_speed'))
+
+    try:
+        #get current user cart
+        query.execute(select.user_cart(email))
+        cart_id = query.fetchone()[0]
+
+        query.execute(select.cart_contents(cart_id))
+        cart_contents = []
+        price = 0
+        for val in query:
+            cart_contents.append({'item_id': val[0], 'item_name': val[1],  'seller': val[2],
+                        'quantity': val[3],  'price': val[4]})
+            price += val[4] * val[3]
+
+        #get shipping price
+        query.execute(select.ship_price(shipc, ships))
+        ship_price = query.fetchone()[0]
+
+        query.execute(select.distinct_sellers_in_cart(cart_id))
+        sellers = []
+        for val in query:
+            sellers.append(val[0])
+
+        ship_price *= len(sellers)
+
+        #remove quantity from listing
+        for item in cart_contents:
+            query.execute(select.check_stock(item['item_id'], '"{}"'.format(item['seller'])))
+            current_quantity = query.fetchone()[0]
+            new_quantity = current_quantity - item['quantity']
+            if (current_quantity - item['quantity'] < 0):
+                return error_response(item['item_name'] + ' does not have enough in stock')
+            query.execute(update.listing(item['item_id'], '"{}"'.format(item['seller']), new_quantity, item['price']))
+
+        #add new Purchase(ShoppingCart, Customer, TotalPrice, Payment, Address)
+        query.execute(insert.purchase(cart_id, email, price + ship_price, payment, address))
+        query.execute(select.last_inserted_cart())
+        purchase_id = query.fetchone()[0]
+
+        #for each different seller in cart
+        #   add an entry into shipment
+        for seller in sellers:
+            query.execute(insert.shipment(purchase_id, '"{}"'.format(seller), shipc, ships))
+
+        #create new cart
+        query.execute(insert.shoppingcart())
+        query.execute(select.last_inserted_cart())
+        new_cart_id = query.fetchone()[0]
+
+        #update user current cart
+        query.execute(update.user_cart(email, new_cart_id))
+
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, message="successfully checked out user " + email)
+
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500

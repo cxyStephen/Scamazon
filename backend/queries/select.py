@@ -94,3 +94,13 @@ def cart_contents(CartID):
         FROM shoppingcartcontents s JOIN listing l ON s.item=l.item AND s.seller=l.seller
             JOIN item i ON s.item = i.ItemID WHERE s.CartID={}
     '''.format(CartID)
+
+def ship_price(Company, Speed):
+    return '''
+    SELECT Price FROM shiptype WHERE Company={} AND Speed={}
+    '''.format(Company, Speed)
+
+def distinct_sellers_in_cart(CartID):
+    return '''
+    SELECT DISTINCT Seller FROM shoppingcartcontents WHERE CartID={}
+    '''.format(CartID)

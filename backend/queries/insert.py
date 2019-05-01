@@ -54,3 +54,13 @@ def add_to_cart(CartID, Item, Seller, Quantity):
     return '''
     INSERT INTO shoppingcartcontents(CartID, Item, Seller, Quantity) VALUES ({}, {}, {}, {})
     '''.format(CartID, Item, Seller, Quantity)
+
+def purchase(ShoppingCart, Customer, TotalPrice, Payment, Address):
+    return '''
+    INSERT INTO purchase(ShoppingCart, Customer, PurchaseDate, TotalPrice, Payment, Address) VALUES ({}, {}, current_date(), {}, {}, {})
+    '''.format(ShoppingCart, Customer, TotalPrice, Payment, Address)
+
+def shipment(Purchase, Seller, Company, Speed):
+    return '''
+    INSERT INTO shipment(Purchase, Seller, Company, Speed) VALUES ({}, {}, {}, {})
+    '''.format(Purchase, Seller, Company, Speed)

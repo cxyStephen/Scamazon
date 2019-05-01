@@ -17,3 +17,8 @@ def listing_remove(Item, Seller):
     return '''
     DELETE FROM listing WHERE Seller={} AND Item={}
     '''.format(Seller, Item)
+
+def user_cart(Email, CartID):
+    return '''
+    UPDATE customer SET CurrentCart={} WHERE Email={}
+    '''.format(CartID, Email)
