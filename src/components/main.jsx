@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import UserAuth from "./userAuth";
 import UserType from "./userType";
-import MarketPlace from "./marketPlace";
 import AccountPage from "./accountPage";
 import AddressPage from "./addressPage";
 import NewAddress from "./newAddress";
+import CustomerMarketplace from "./CustomerMarketplace";
 
 class Main extends Component {
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={MarketPlace} />
+          <Route exact path="/" component={CustomerMarketplace} />
           <Route
             exact
             path="/user"

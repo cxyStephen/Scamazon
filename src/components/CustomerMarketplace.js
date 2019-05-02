@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
-import Listings from './Listings';
-import ListingForm from './ListingForm';
-import Items from './Items';
-import ItemForm from './ItemForm';
+import React, { Component } from "react";
+import Listings from "./Listings";
 
 class CustomerMarketplace extends Component {
   render() {
     return (
       <div className="container">
-        <h1 align="center" >Welcome to the SCAMAZON Marketplace!</h1>
+        <h1 align="center">Welcome to the SCAMAZON Marketplace!</h1>
         <Listings />
       </div>
     );

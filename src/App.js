@@ -1,45 +1,24 @@
-<<<<<<< HEAD
-import React, { Component } from 'react';
-//import SellerMarketplace from './components/SellerMarketplace';
-import CustomerMarketplace from './components/CustomerMarketplace';
-=======
-import Listings from './components/Listings';
-import ListingForm from './components/ListingForm';
-import Items from './components/Items';
-import ItemForm from './components/ItemForm';
 import React, { Component } from "react";
 import "./App.css";
 import Main from "./components/main";
 import NavBar from "./components/navbar";
 import Button from "react-bootstrap/Button";
->>>>>>> 55169f625f9c2f7daf76b2d1ef24a084782719d0
 
 class App extends Component {
   render() {
     return (
-<<<<<<< HEAD
-      <div>
-        <CustomerMarketplace />
+      <div className="App">
+        <NavBar
+          isLoggedIn={this.state.email.length > 0}
+          onLogout={this.handleLogout}
+        />
+        <div>Current user is: {this.state.email}</div>
+        <Button variant="primary" onClick={() => this.test()}>
+          Test
+        </Button>
+        <hr />
+        <Main onLogin={this.handleLogin} email={this.state.email} />
       </div>
-=======
-        <div className="App">
-          <NavBar
-              isLoggedIn={this.state.email.length > 0}
-              onLogout={this.handleLogout}
-          />
-          <div>Current user is: {this.state.email}</div>
-          <Button variant="primary" onClick={() => this.test()}>
-            Test
-          </Button>
-          <hr />
-
-          <Main onLogin={this.handleLogin} email={this.state.email} />
-          <Listings />
-          <ListingForm />
-          <Items />
-          <ItemForm />
-        </div>
->>>>>>> 55169f625f9c2f7daf76b2d1ef24a084782719d0
     );
   }
 
