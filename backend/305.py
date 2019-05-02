@@ -349,15 +349,25 @@ def get_all_reviews():
 def get_listings():
     query = g.cursor
 
+    out = []
     try:
-        query.execute(select.listings())    
+        query.execute(select.listings())
+        for val in query:
+            out.append({'item_name': val[0], 'item_id': val[1], 'price': val[2],
+                        'seller_name': val[3], 'seller_id': val[4], 'quantity': val[5]})
+
+        for item in out:
+            query.execute(select.item_review_avg(item['item_id']))
+            item_rating = query.fetchone()
+            if (item_rating and item_rating[0]):
+                item['item_rating'] = float(item_rating[0])
+
+            query.execute(select.seller_review_avg('"{}"'.format(item['seller_id'])))
+            seller_rating = query.fetchone()
+            if (seller_rating and seller_rating[0]):
+                item['seller_rating'] = float(seller_rating[0])
     except Exception as e:
         return error_response(e)
-
-    out = []
-    for val in query:
-        out.append({'item_name': val[0], 'item_id': val[1], 'price': val[2],
-                    'seller_name': val[3], 'seller_id': val[4], 'quantity': val[5]})
 
     return jsonify(success=True, listings=out), 200
 
