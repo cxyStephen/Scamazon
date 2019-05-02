@@ -177,7 +177,7 @@ def create_review():
     desc =   req.get('desc')
     user =   req.get('user')
 
-    rtype =  req.get('type')
+    rtype =  req.get('type')[1:-1]
     rid =    req.get('id')
 
     try:
@@ -256,8 +256,8 @@ def get_items():
 @app.route('/get_payments', methods=['GET'])
 def get_payments():
     query = g.cursor
-    req = process_strings(request.args)
-    user = req.get('user')
+    req = request.args
+    user = '"{}"'.format(req.get('user'))
 
     try:
         query.execute(select.payments(user))    
@@ -274,8 +274,8 @@ def get_payments():
 @app.route('/get_addresses', methods=['GET'])
 def get_addresses():
     query = g.cursor
-    req = process_strings(request.args)
-    user = req.get('user')
+    req = request.args
+    user = '"{}"'.format(req.get('user'))
 
     try:
         query.execute(select.addresses(user))    
@@ -292,10 +292,13 @@ def get_addresses():
 @app.route('/get_reviews', methods=['GET'])
 def get_reviews():
     query = g.cursor
-    req = process_strings(request.args)
+    req = request.args
     rtype = req.get('type')
     rid   = req.get('id')
     
+    if (type(rid) == str):
+        rid = '"{}"'.format(rid)
+
     out = []
     avg = 0.0
     try:
@@ -323,7 +326,7 @@ def get_reviews():
 @app.route('/get_all_reviews', methods=['GET'])
 def get_all_reviews():
     query = g.cursor
-    req = process_strings(request.args)
+    req = request.args
     rtype = req.get('type', 'NULL')
 
     out = []
@@ -374,8 +377,8 @@ def get_listings():
 @app.route('/get_cart', methods=['GET'])
 def get_cart():
     query = g.cursor
-    req = process_strings(request.args)
-    user = req.get('user')
+    req = request.args
+    user = '"{}"'.format(req.get('user'))
 
     try:
         query.execute(select.user_cart(user))
