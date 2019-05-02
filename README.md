@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+=======
+## Dependencies
+
+React Router `npm install --save react-router-dom`
+
+React Bootstrap `npm install react-bootstrap bootstrap`
+
+React Router Bootstrap `npm install -S react-router-bootstrap`
+>>>>>>> origin/tiffany
 
 ## Available Scripts
 
