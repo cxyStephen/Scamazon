@@ -33,6 +33,16 @@ def listings():
     SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email
     '''
 
+def listings_by_seller(Seller):
+    return '''
+    SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email WHERE Seller={}
+    '''.format(Seller)
+
+def listings_by_item(Item):
+    return '''
+    SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email WHERE Item={}
+    '''.format(Item)
+
 def payments(User):
     return '''
     SELECT PaymentID, PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress FROM payment p WHERE p.UserID={}

@@ -369,10 +369,21 @@ def get_all_reviews():
 @app.route('/get_listings', methods=['GET'])
 def get_listings():
     query = g.cursor
+    req = request.args
+    rtype = req.get('type', 'NULL')
+    rid = req.get('id', 'NULL')
+
+    if (rtype == 'seller'):
+        rid = '"{}"'.format(rid)
 
     out = []
     try:
-        query.execute(select.listings())
+        if (rtype == 'seller'):
+            query.execute(select.listings_by_seller(rid))
+        elif (rtype == 'item'):
+            query.execute(select.listings_by_item(rid))
+        else:
+            query.execute(select.listings())
         for val in query:
             out.append({'item_name': val[0], 'item_id': val[1], 'price': val[2],
                         'seller_name': val[3], 'seller_id': val[4], 'quantity': val[5]})
