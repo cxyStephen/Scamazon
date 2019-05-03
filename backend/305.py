@@ -310,7 +310,8 @@ def get_reviews():
             return error_response("invalid review type")
 
         for val in query:
-            out.append({'rating': val[0], 'title': val[1], 'desc': val[2], 'user': val[3]})
+            out.append({'rating': val[0], 'title': val[1], 'desc': val[2],
+                        'user': val[3], 'user_fname': val[4], 'user_lname': val[5]})
 
         if (rtype == 'item'):
             query.execute(select.item_review_avg(rid))

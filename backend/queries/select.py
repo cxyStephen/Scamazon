@@ -50,12 +50,12 @@ def all_reviews(Type):
 
 def item_reviews(ItemID):
     return '''
-    SELECT Rating, Title, Body, Customer FROM review WHERE ItemID={}
+    SELECT Rating, Title, Body, Customer, FirstName, LastName FROM review r JOIN customer c ON r.Customer=c.Email WHERE ItemID={}
     '''.format(ItemID)
 
 def seller_reviews(Seller):
     return '''
-    SELECT Rating, Title, Body, Customer FROM review WHERE Seller={}
+    SELECT Rating, Title, Body, Customer, FirstName, LastName FROM review r JOIN customer c ON r.Customer=c.Email WHERE Seller={}
     '''.format(Seller)
 
 def item_review_avg(ItemID):
