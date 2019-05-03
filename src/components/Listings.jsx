@@ -20,7 +20,7 @@ class Listings extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.sort_by != nextState.sort_by;
+    return this.state.sort_by !== nextState.sort_by;
   }
 
   componentWillUpdate() {

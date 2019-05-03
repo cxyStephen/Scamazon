@@ -27,8 +27,11 @@ class userAuth extends Component {
   componentWillUnmount() {
     this._isMounted = false;
   }
+  componentDidMount() {
+      this._isMounted= true;
+  }
 
-  render() {
+    render() {
     if (this.props.email.length > 0) return <Redirect to="/user/account" />;
 
     let errorAlert;
@@ -106,11 +109,12 @@ class userAuth extends Component {
         console.log(response.success + "\n" + response.message);
         if (response.success) {
           this.props.onLogin(this.state.email);
-          if (this.state.isRegister) this.props.history.push("/user/type");
+          if (this.state.isRegister) this.props.history.push("/user/account/type");
           else if (this._isMounted && !this.state.isRegister) {
             this.setState({ loggedIn: true });
           }
-        } else if (this._isMounted) {
+        } else if (!response.success && this._isMounted) {
+            console.log("errorrr")
           this.setState({ error: response.message });
         }
       })

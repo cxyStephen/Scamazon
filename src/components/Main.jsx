@@ -30,7 +30,7 @@ class Main extends Component {
             )}
           />
           <Route
-            exact path="user/account/type"
+            exact path="/user/account/type"
             render={props => <UserType {...props} email={this.props.email} />} // this is how u pass props using Route
           />
           <Route
