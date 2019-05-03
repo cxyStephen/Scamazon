@@ -23,6 +23,11 @@ def items():
     SELECT ItemID, ItemName, Summary, Manufacturer, Category FROM item
     '''
 
+def item(ItemID):
+    return '''
+    SELECT ItemID, ItemName, Summary, Manufacturer, Category FROM item WHERE ItemID={}
+    '''.format(ItemID)
+
 def listings():
     return '''
     SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email

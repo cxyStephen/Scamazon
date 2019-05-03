@@ -253,6 +253,23 @@ def get_items():
 
     return jsonify(success=True, items=out), 200
 
+@app.route('/get_item', methods=['GET'])
+def get_item():
+    query = g.cursor
+    req = request.args
+    item_id = req.get('item_id')
+
+    try:
+        query.execute(select.item(item_id))    
+    except Exception as e:
+        return error_response(e)
+
+    val = query.fetchone()
+    item = {'item_id': val[0], 'name': val[1], 'desc': val[2],
+                    'manufacturer': val[3], 'category': val[4]}
+
+    return jsonify(success=True, item=item), 200
+
 @app.route('/get_payments', methods=['GET'])
 def get_payments():
     query = g.cursor
