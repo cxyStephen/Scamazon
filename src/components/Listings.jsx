@@ -12,7 +12,6 @@ class Listings extends Component {
   }
 
   componentDidMount() {
-    console.log(API + "/get_listings");
     fetch(API + "/get_listings")
       .then(response => response.json())
       .then(data => {
@@ -40,12 +39,11 @@ class Listings extends Component {
         );
         break;
       case "item":
-        listings.sort((a, b) => parseInt(a.item_id) - parseInt(b.item_id));
+        listings.sort((a, b) => a.item_name.localeCompare(b.item_name));
         break;
       case "seller":
         listings.sort((a, b) => a.seller_name.localeCompare(b.seller_name));
     }
-    console.log(parseInt(listings[0].item_rating));
     this.setState({ sort_by: sort_by, listings: listings });
   };
 
