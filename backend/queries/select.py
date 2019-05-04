@@ -110,6 +110,11 @@ def cart_contents(CartID):
             JOIN item i ON s.item = i.ItemID WHERE s.CartID={}
     '''.format(CartID)
 
+def cart_contains(CartID, Item, Seller):
+    return '''
+    SELECT s.Quantity FROM shoppingcartcontents WHERE CartID={} AND Item={} AND Seller={}
+    '''.format(CartID, Item, Seller)
+
 def ship_price(Company, Speed):
     return '''
     SELECT Price FROM shiptype WHERE Company={} AND Speed={}
