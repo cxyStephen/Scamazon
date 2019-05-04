@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import API from "../constants";
 import StarRatingComponent from "react-star-rating-component";
+import Item from "./Item";
 
 class Listings extends Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class Listings extends Component {
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
                 <td>{listing.item_id}</td>
-                <td>{listing.item_name}</td>
+                <td><Item display={listing.item_name} item_id={listing.item_id} email={this.props.email} /></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
                 <td>{listing.seller_name}</td>
