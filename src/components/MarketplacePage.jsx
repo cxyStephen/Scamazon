@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Listings from "./Listings";
 
-class Marketplace extends Component {
+class MarketplacePage extends Component {
   render() {
     return (
       <div className="container">
@@ -12,4 +12,4 @@ class Marketplace extends Component {
   }
 }
 
-export default Marketplace;
+export default MarketplacePage;

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import API from "../constants";
 import StarRatingComponent from "react-star-rating-component";
+import Item from "./Item";
 
 class Listings extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class Listings extends Component {
 
     return (
       <div className="container">
-        <h3>Listings</h3>
+        <h3 align="left">Listings</h3>
         <div className="form-group" align="right">
           <label>
             Sort By:
@@ -68,8 +69,8 @@ class Listings extends Component {
             </select>
           </label>
         </div>
-        <table className="table table-bordered table-hover table-condensed">
-          <thead>
+        <table className="table table-hover table-sm table-borderless table-striped">
+          <thead className="thead-dark">
             <tr>
               <th>Item ID</th>
               <th>Item Name</th>
@@ -84,7 +85,7 @@ class Listings extends Component {
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
                 <td>{listing.item_id}</td>
-                <td>{listing.item_name}</td>
+                <td><Item display={listing.item_name} item_id={listing.item_id} email={this.props.email} /></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
                 <td>{listing.seller_name}</td>

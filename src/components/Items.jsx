@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 
 class Items extends Component {
@@ -6,30 +7,46 @@ class Items extends Component {
     super(props);
     this.state = {
       items: [], 
-      sort_by: "Item"
+      sort_by: ""
     };
   }
 
   componentDidMount() {
     fetch(API + "/get_items")
       .then(response => response.json())
-      .then(data => this.setState({ items: data.items }))
+      .then(data => {
+        data.items.sort(
+          (a, b) => a.name.localeCompare(b.name)
+        );
+        this.setState({ items: data.items })
+      })
       .catch(error => console.error(error));
   }
 
   handleInputChange = e => {
-    const target = e.target;
-    this.setState({
-      [target.name]: target.value
-    });
+    const {items} = this.state;
+    const sort_by = e.target.value;
+    switch (sort_by) {
+      case "item":
+        items.sort(
+          (a, b) => a.name.localeCompare(b.name)
+        );
+        break;
+      case "category":
+        items.sort(
+          (a, b) => a.category.localeCompare(b.category)
+        );
+    }
+    console.log(parseInt(items[0].item_rating));
+    this.setState({ sort_by: sort_by, items: items });
   }
 
   render() {
-    const {items} = this.state;
+    let {items} = this.state;
 
     return (
       <div className="container">
-        <h3>Items</h3>
+        <h3 align="left">Items</h3>
         <div className="form-group" align="right">
           <label>Sort By:
             <select
@@ -37,13 +54,13 @@ class Items extends Component {
               value={this.state.sort_by}
               onChange={this.handleInputChange}
             >
-              <option value="Item">Item</option>
-              <option value="Category">Category</option>
+              <option value="item">Item</option>
+              <option value="category">Category</option>
             </select>
           </label>
         </div>
-        <table className="table table-bordered table-hover table-condensed">
-          <thead>
+        <table className="table table-bordered table-hover table-sm table-borderless table-striped">
+          <thead className="thead-dark">
             <tr>
               <th>ID</th>
               <th>Name</th>
