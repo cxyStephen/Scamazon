@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import API from "../constants";
 import Alert from "react-bootstrap/Alert";
+import {Redirect} from "react-router-dom";
 
 class NewAddress extends Component {
   state = {
@@ -17,6 +18,7 @@ class NewAddress extends Component {
   };
 
   render() {
+    if (this.props.email.length === 0) return <Redirect to="/user" />;
     let errorAlert;
     if (this.state.error.length > 0)
       errorAlert = <Alert variant="danger">{this.state.error}</Alert>;

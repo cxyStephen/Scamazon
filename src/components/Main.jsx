@@ -8,6 +8,8 @@ import NewAddress from "./NewAddress";
 import MarketplacePage from "./MarketplacePage";
 import CartPage from "./CartPage";
 import SellPage from "./SellPage"
+import PaymentPage from "./PaymentPage"
+import NewPayment from "./NewPayment"
 
 class Main extends Component {
   render() {
@@ -47,6 +49,14 @@ class Main extends Component {
             exact path="/user/account/address/new"
             render={props => <NewAddress {...props} email={this.props.email} />}
           />
+            <Route
+                exact path="/user/account/payment"
+                render={props => <PaymentPage {...props} email={this.props.email} />}
+            />
+            <Route
+                exact path="/user/account/payment/new"
+                render={props => <NewPayment {...props} email={this.props.email} />}
+            />
         </Switch>
       </main>
     );
