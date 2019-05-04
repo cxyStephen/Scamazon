@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 
 class Items extends Component {
@@ -16,8 +15,13 @@ class Items extends Component {
       .then(response => response.json())
       .then(data => this.setState({ items: data.items }))
       .catch(error => console.error(error));
+  }
 
-    //sortByItem();
+  handleInputChange = e => {
+    const target = e.target;
+    this.setState({
+      [target.name]: target.value
+    });
   }
 
   render() {
@@ -26,7 +30,6 @@ class Items extends Component {
     return (
       <div className="container">
         <h3>Items</h3>
-        <h5>(what sellers can sell in the marketplace)</h5>
         <div className="form-group" align="right">
           <label>Sort By:
             <select
@@ -34,7 +37,7 @@ class Items extends Component {
               value={this.state.sort_by}
               onChange={this.handleInputChange}
             >
-              <option value="Item" selected="selected">Item</option>
+              <option value="Item">Item</option>
               <option value="Category">Category</option>
             </select>
           </label>
@@ -51,7 +54,7 @@ class Items extends Component {
           </thead>
           <tbody>
             {items.map(item => (
-              <tr>
+              <tr key={item.item_id}>
                 <td>{item.item_id}</td>
                 <td>{item.name}</td>
                 <td>{item.desc}</td>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 import StarRatingComponent from 'react-star-rating-component';
 
@@ -19,6 +18,7 @@ class Listings extends Component {
       .catch(error => console.error(error));
   }
 
+  /*
   shouldComponentUpdate(nextProps, nextState) {
     return this.state.sort_by !== nextState.sort_by;
   }
@@ -43,7 +43,8 @@ class Listings extends Component {
         this.setState({listings: listings});
     }
   }
-  
+  */
+
   handleInputChange = e => {
     const target = e.target;
     this.setState({
@@ -56,7 +57,6 @@ class Listings extends Component {
     return (
       <div className="container">
         <h3>Listings</h3>
-        <h5>(what sellers are currently selling in the marketplace)</h5>
         <div className="form-group" align="right">
           <label>Sort By:
             <select
@@ -85,7 +85,7 @@ class Listings extends Component {
           </thead>
           <tbody>
             {listings.map(listing => (
-              <tr>
+              <tr key={listing.item_id + listing.seller_id}>
                 <td>{listing.item_id}</td>
                 <td>{listing.item_name}</td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
