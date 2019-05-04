@@ -107,9 +107,14 @@ def create_item():
     desc = req.get('desc', 'NULL')
     man =  req.get('manufacturer')
     cat =  req.get('category')
+    img =  req.get('image_url', None)
 
     try:
         query.execute(insert.item(name, desc, man, cat))
+        if (img):
+            query.execute(select.last_inserted())
+            item_id = query.fetchone()[0]
+            query.execute(insert.item_image(item_id, img))
     except Exception as e:
         return error_response(e)
     
@@ -268,7 +273,15 @@ def get_item():
     item = {'item_id': val[0], 'name': val[1], 'desc': val[2],
                     'manufacturer': val[3], 'category': val[4]}
 
-    return jsonify(success=True, item=item), 200
+    images = []
+    try:
+        query.execute(select.item_images(item_id))    
+    except Exception as e:
+        return error_response(e)
+    for val in query:
+        images.append(val[0])
+
+    return jsonify(success=True, item=item, images=images), 200
 
 @app.route('/get_payments', methods=['GET'])
 def get_payments():

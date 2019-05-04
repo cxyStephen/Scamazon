@@ -23,6 +23,11 @@ def item(ItemName, Summary, Manufacturer, Category):
     INSERT INTO item(ItemName, Summary, Manufacturer, Category) VALUES ({}, {}, {}, {})
     '''.format(ItemName, Summary, Manufacturer, Category)
 
+def item_image(ItemID, ImageURL):
+    return '''
+    INSERT INTO itemimage(ItemID, ImageURL) VALUES ({}, {})
+    '''.format(ItemID, ImageURL)
+
 def listing(Item, Seller, Quantity, Price):
     return '''
     INSERT INTO listing(Item, Seller, Quantity, Price) VALUES ({}, {}, {}, {})

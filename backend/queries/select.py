@@ -28,6 +28,11 @@ def item(ItemID):
     SELECT ItemID, ItemName, Summary, Manufacturer, Category FROM item WHERE ItemID={}
     '''.format(ItemID)
 
+def item_images(ItemID):
+    return '''
+    SELECT ImageURL FROM itemimage WHERE ItemID={}
+    '''.format(ItemID)
+
 def listings():
     return '''
     SELECT ItemName, Item, Price, DisplayName, Seller, Quantity FROM listing l JOIN item i ON l.Item = i.ItemID JOIN seller s ON l.seller = s.email
