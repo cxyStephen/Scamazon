@@ -12,7 +12,7 @@ class CustomerMarketplace extends Component {
         <h1 align="center">Welcome to the SCAMAZON Marketplace!</h1>
         <Listings />
         <ListingForm onSubmit={this.props.history} />
-        <Items />
+        <Items email={this.props.email}/>
         <ItemForm />
       </div>
     );

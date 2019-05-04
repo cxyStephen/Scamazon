@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import StarRatingComponent from 'react-star-rating-component';
 import API from "../constants";
+import AddToCart from "./AddToCart";
 
 const backdropStyle = {
   position: 'fixed',
@@ -19,13 +20,13 @@ const backdropStyle = {
 const modalStyle = function() {
   return {
     position: 'fixed',
-    width: 600,
+    width: 650,
     zIndex: 1040,
     top: 0,
     left: 0,
     backgroundColor: 'white',
     boxShadow: '0 5px 15px rgba(0,0,0,.5)',
-    padding: 20
+    padding: 0
   };
 };
 
@@ -72,7 +73,7 @@ class Item extends Component {
     };
   }
 
-  renderBackdrop(props) {
+  renderBackdrop = (props) => {
     return <div {...props} style={backdropStyle} />;
   }
 
@@ -92,11 +93,12 @@ class Item extends Component {
           style={modalStyle()}
           aria-labelledby="modal-label"
           show={this.state.showModal}
-          renderBackdrop={this.renderBackdrop}
+          renderbackdrop={this.renderBackdrop}
         >
-        {item.item_id != -1 &&
-          <table className="table">    
-            <tr> <td width="600">
+        {item.item_id !== -1 &&
+          <table className="table">
+          <tbody>
+            <tr><td width="650">
             <h3 id="modal-label">{item.name}</h3>
             <StarRatingComponent 
                 name="item_rating"
@@ -108,7 +110,7 @@ class Item extends Component {
             <b>Manufacturer:</b> {item.manufacturer}
             <br />
             <b>Category:</b> {item.category}
-            <p paddingBottom="1cm"></p>
+            <p></p>
           <h4>Sold by:</h4>
             <table className="table table-bordered table-hover">
           <thead>
@@ -120,7 +122,7 @@ class Item extends Component {
           </thead>
           <tbody>
             {listings.map(listing => (
-              <tr>
+              <tr key={listing.seller_id}>
                 <td>{listing.seller_name}<br />
                 <StarRatingComponent 
                     name="seller_rating"
@@ -130,7 +132,7 @@ class Item extends Component {
                   /></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
-                <td><Button>🛒</Button></td>
+                <td><AddToCart email={this.props.email} item={listing.item_id} seller={listing.seller_id}/></td>
               </tr>
             ))}
           </tbody>
@@ -140,7 +142,7 @@ class Item extends Component {
             <h4>Reviews:</h4>
             <div>
             {reviews.map(review => (
-              <div>
+              <div key={review.user}>
               <h5>{review.user_fname} {review.user_lname}</h5>
               <h6>{review.title}</h6>
               <StarRatingComponent 
@@ -155,6 +157,7 @@ class Item extends Component {
             ))}</div>
             </td>
             </tr>
+            </tbody>
           </table>
         }
         </Modal>

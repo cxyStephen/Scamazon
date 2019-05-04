@@ -54,7 +54,7 @@ class Items extends Component {
             {items.map(item => (
               <tr>
                 <td>{item.item_id}</td>
-                <td><Item display={item.name} item_id={item.item_id}/></td>
+                <td><Item display={item.name} item_id={item.item_id} email={this.props.email}/></td>
                 <td>{item.desc}</td>
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>

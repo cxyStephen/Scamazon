@@ -12,7 +12,9 @@ class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={CustomerMarketplace} />
+          <Route exact path="/" render={props => (
+              <CustomerMarketplace {...props} email={this.props.email} />
+            )} />
           <Route
             exact path="/user"
             render={props => (
