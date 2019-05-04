@@ -396,11 +396,15 @@ def get_listings():
             item_rating = query.fetchone()
             if (item_rating and item_rating[0]):
                 item['item_rating'] = float(item_rating[0])
+            else:
+                item['item_rating'] = -1.0
 
             query.execute(select.seller_review_avg('"{}"'.format(item['seller_id'])))
             seller_rating = query.fetchone()
             if (seller_rating and seller_rating[0]):
                 item['seller_rating'] = float(seller_rating[0])
+            else:
+                item['seller_rating'] = -1.0
     except Exception as e:
         return error_response(e)
 
