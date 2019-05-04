@@ -432,6 +432,27 @@ def get_cart():
 
     return jsonify(success=True, contents=out, subtotal=price), 200
 
+@app.route('/get_user_type', methods=['GET'])
+def get_user_type():
+    query = g.cursor
+    req = request.args
+    user = '"{}"'.format(req.get('email'))
+
+    is_customer = False
+    is_seller = False
+    try:
+        query.execute(select.user_is_customer(user))
+        if (query.fetchone()):
+            is_customer = True
+
+        query.execute(select.user_is_seller(user))
+        if (query.fetchone()):
+            is_seller = True
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, customer=is_customer, seller=is_seller), 200
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     query = g.cursor

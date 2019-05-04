@@ -125,3 +125,12 @@ def distinct_sellers_in_cart(CartID):
     SELECT DISTINCT Seller FROM shoppingcartcontents WHERE CartID={}
     '''.format(CartID)
     
+def user_is_customer(Email):
+    return '''
+    SELECT * FROM customer WHERE Email={}
+    '''.format(Email)
+
+def user_is_seller(Email):
+    return '''
+    SELECT * FROM seller WHERE Email={}
+    '''.format(Email)
