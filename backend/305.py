@@ -339,7 +339,9 @@ def get_reviews():
     except Exception as e:
         return error_response(e)
 
-    return jsonify(success=True, reviews=out, average_rating=float(avg)), 200
+    if (avg):
+        avg = float(avg)
+    return jsonify(success=True, reviews=out, average_rating=avg), 200
 
 @app.route('/get_all_reviews', methods=['GET'])
 def get_all_reviews():
