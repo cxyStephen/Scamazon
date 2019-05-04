@@ -16,7 +16,9 @@ class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={MarketplacePage} />
+          <Route exact path="/" render={props => (
+              <CustomerMarketplace {...props} email={this.props.email} />
+            )} />
           <Route exact path="/sell" component={SellPage} />
           <Route exact path="/cart" component={CartPage} />
           <Route

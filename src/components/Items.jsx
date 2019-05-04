@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import Item from "./Item";
 import API from "../constants";
 
 class Items extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [], 
+      items: [],
       sort_by: "Item"
     };
   }
@@ -56,7 +58,7 @@ class Items extends Component {
             {items.map(item => (
               <tr key={item.item_id}>
                 <td>{item.item_id}</td>
-                <td>{item.name}</td>
+                <td><Item display={item.name} item_id={item.item_id} email={this.props.email}/></td>
                 <td>{item.desc}</td>
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>
