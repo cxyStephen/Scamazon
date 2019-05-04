@@ -13,7 +13,6 @@ class Listings extends Component {
   }
 
   componentDidMount() {
-    console.log(API + "/get_listings");
     fetch(API + "/get_listings")
       .then(response => response.json())
       .then(data => {
@@ -46,7 +45,6 @@ class Listings extends Component {
       case "seller":
         listings.sort((a, b) => a.seller_name.localeCompare(b.seller_name));
     }
-    console.log(parseInt(listings[0].item_rating));
     this.setState({ sort_by: sort_by, listings: listings });
   };
 
