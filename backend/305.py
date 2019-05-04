@@ -284,7 +284,8 @@ def get_payments():
     out = []
     for val in query:
         out.append({'payment_id': val[0], 'payment_type': val[1], 'payment_key': val[2],
-                    'exp_date': val[3], 'cvv': val[4], 'billing_address': val[5]})
+                    'exp_date': str(val[3])[-2:] + "/" + str(val[3])[0:-2],
+                    'cvv': val[4], 'billing_address': val[5]})
 
     return jsonify(success=True, payments=out), 200
 
