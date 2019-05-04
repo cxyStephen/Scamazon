@@ -45,7 +45,7 @@ def listings_by_item(Item):
 
 def payments(User):
     return '''
-    SELECT PaymentID, PaymentType, PaymentKey, ExpirationDate, CVV, BillingAddress FROM payment p WHERE p.UserID={}
+    SELECT PaymentID, PaymentType, PaymentKey, EXTRACT(YEAR_MONTH FROM ExpirationDate), CVV, BillingAddress FROM payment p WHERE p.UserID={}
     '''.format(User)
 
 def addresses(User):
