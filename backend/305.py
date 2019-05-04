@@ -286,7 +286,7 @@ def get_payments():
         out.append({'payment_id': val[0], 'payment_type': val[1], 'payment_key': val[2],
                     'exp_date': val[3], 'cvv': val[4], 'billing_address': val[5]})
 
-    return jsonify(success=True, addresses=out), 200
+    return jsonify(success=True, payments=out), 200
 
 @app.route('/get_addresses', methods=['GET'])
 def get_addresses():
