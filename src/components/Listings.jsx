@@ -40,7 +40,7 @@ class Listings extends Component {
         );
         break;
       case "item":
-        listings.sort((a, b) => parseInt(a.item_id) - parseInt(b.item_id));
+        listings.sort((a, b) => a.item_name.localeCompare(b.item_name));
         break;
       case "seller":
         listings.sort((a, b) => a.seller_name.localeCompare(b.seller_name));
