@@ -112,7 +112,7 @@ def cart_contents(CartID):
 
 def cart_contains(CartID, Item, Seller):
     return '''
-    SELECT s.Quantity FROM shoppingcartcontents WHERE CartID={} AND Item={} AND Seller={}
+    SELECT Quantity FROM shoppingcartcontents WHERE CartID={} AND Item={} AND Seller={}
     '''.format(CartID, Item, Seller)
 
 def ship_price(Company, Speed):
