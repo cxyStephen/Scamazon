@@ -72,8 +72,7 @@ class Listings extends Component {
         <table className="table table-hover table-sm table-borderless table-striped">
           <thead className="thead-dark">
             <tr>
-              <th>Item ID</th>
-              <th>Item Name</th>
+              <th>Item</th>
               <th>Price</th>
               <th>Quantity</th>
               <th>Seller Name</th>
@@ -84,7 +83,6 @@ class Listings extends Component {
           <tbody>
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
-                <td>{listing.item_id}</td>
                 <td><Item display={listing.item_name} item_id={listing.item_id} email={this.props.email} /></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
