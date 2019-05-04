@@ -56,7 +56,7 @@ class Listings extends Component {
     const {listings} = this.state;
     return (
       <div className="container">
-        <h3>Listings</h3>
+        <h3 align="left">Listings</h3>
         <div className="form-group" align="right">
           <label>Sort By:
             <select
@@ -71,8 +71,8 @@ class Listings extends Component {
             </select>
           </label>
         </div>
-        <table className="table table-bordered table-hover table-condensed">
-          <thead>
+        <table className="table table-hover table-sm table-borderless table-striped">
+          <thead className="thead-dark">
             <tr>
               <th>Item ID</th>
               <th>Item Name</th>

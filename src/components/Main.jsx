@@ -5,14 +5,18 @@ import UserType from "./UserType";
 import AccountPage from "./AccountPage";
 import AddressPage from "./AddressPage";
 import NewAddress from "./NewAddress";
-import Marketplace from "./Marketplace";
+import MarketplacePage from "./MarketplacePage";
+import CartPage from "./CartPage";
+import SellPage from "./SellPage"
 
 class Main extends Component {
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={Marketplace} />
+          <Route exact path="/" component={MarketplacePage} />
+          <Route exact path="/sell" component={SellPage} />
+          <Route exact path="/cart" component={CartPage} />
           <Route
             exact path="/user"
             render={props => (
