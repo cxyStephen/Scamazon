@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import {NavLink, Redirect} from "react-router-dom";
 import API from "../constants";
 import Table from "react-bootstrap/Table";
 
@@ -12,8 +12,9 @@ class AddressPage extends Component {
 
   componentDidMount() {
     const url = API + "/get_addresses?";
-    const query = "user=" + this.props.email;
-    if (query.length === 0) return;
+    const email = this.props.email;
+    if(email.length === 0) return;
+    const query = "user=" + email;
     fetch(url + query)
       .then(res => res.json())
       .then(response => {
@@ -29,6 +30,7 @@ class AddressPage extends Component {
   }
 
   render() {
+    if (this.props.email.length === 0) return <Redirect to="/user" />;
     let table;
     if (!this.state.isLoading && this.state.addresses.length > 0) {
       table = (
@@ -62,7 +64,7 @@ class AddressPage extends Component {
     }
     return (
       <div>
-        <div>Addresses</div>
+        <h1>Addresses</h1>
         <NavLink to="address/new">Add an address</NavLink>
         {table}
       </div>

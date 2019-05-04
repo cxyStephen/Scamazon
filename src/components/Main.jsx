@@ -5,6 +5,8 @@ import UserType from "./UserType";
 import AccountPage from "./AccountPage";
 import AddressPage from "./AddressPage";
 import NewAddress from "./NewAddress";
+import PaymentPage from "./PaymentPage"
+import NewPayment from "./NewPayment"
 import CustomerMarketplace from "./CustomerMarketplace";
 
 class Main extends Component {
@@ -43,6 +45,14 @@ class Main extends Component {
             exact path="/user/account/address/new"
             render={props => <NewAddress {...props} email={this.props.email} />}
           />
+            <Route
+                exact path="/user/account/payment"
+                render={props => <PaymentPage {...props} email={this.props.email} />}
+            />
+            <Route
+                exact path="/user/account/payment/new"
+                render={props => <NewPayment {...props} email={this.props.email} />}
+            />
         </Switch>
       </main>
     );
