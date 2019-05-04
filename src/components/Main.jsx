@@ -19,8 +19,12 @@ class Main extends Component {
           <Route exact path="/" render={props => (
               <MarketplacePage {...props} email={this.props.email} />
             )} />
-          <Route exact path="/sell" component={SellPage} />
-          <Route exact path="/cart" component={CartPage} />
+          <Route exact path="/sell" render={props => (
+              <SellPage {...props} email={this.props.email} />
+            )} />
+          <Route exact path="/cart" render={props => (
+              <CartPage {...props} email={this.props.email} />
+            )} />
           <Route
             exact path="/user"
             render={props => (
