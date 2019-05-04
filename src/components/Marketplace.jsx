@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Listings from "./Listings";
-import Items from "./Items";
 
 class Marketplace extends Component {
   render() {
