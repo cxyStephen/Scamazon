@@ -7,14 +7,14 @@ import AddressPage from "./AddressPage";
 import NewAddress from "./NewAddress";
 import PaymentPage from "./PaymentPage"
 import NewPayment from "./NewPayment"
-import CustomerMarketplace from "./CustomerMarketplace";
+import Marketplace from "./Marketplace";
 
 class Main extends Component {
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path="/" component={CustomerMarketplace} />
+          <Route exact path="/" component={Marketplace} />
           <Route
             exact path="/user"
             render={props => (
