@@ -463,7 +463,8 @@ def add_to_cart():
         query.execute(select.user_cart(email))
         cart_id = query.fetchone()[0]
 
-        already_in_cart = query.select.cart_contains(cart_id, item, seller).fetchone()
+        query.execute(select.cart_contains(cart_id, item, seller))
+        already_in_cart = query.fetchone()
         if (already_in_cart):
             query.execute(update.cart_quantity(cart_id, item, seller, quant + already_in_cart[0]))
         else:
