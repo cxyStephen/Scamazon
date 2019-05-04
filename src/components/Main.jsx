@@ -10,6 +10,7 @@ import CartPage from "./CartPage";
 import SellPage from "./SellPage"
 import PaymentPage from "./PaymentPage"
 import NewPayment from "./NewPayment"
+import Item from "./Item"
 
 class Main extends Component {
   render() {
@@ -62,6 +63,10 @@ class Main extends Component {
             <Route
                 exact path="/user/account/payment/new"
                 render={props => <NewPayment {...props} email={this.props.email} />}
+            />
+            <Route
+                exact path="/item/:item_id"
+                render={props => <Item {...props} email={this.props.email} />}
             />
         </Switch>
       </main>

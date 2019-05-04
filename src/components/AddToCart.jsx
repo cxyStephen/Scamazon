@@ -49,7 +49,7 @@ class AddToCart extends Component {
     return (
         <div>
         <InputGroup className="mb-3">
-            <FormControl size="sm" defaultValue="1" ref="quantity"/>
+            <FormControl size="sm" defaultValue="1" type="number" ref="quantity"/>
             <InputGroup.Append>
             <Button size="sm" onClick={this.addToCart}>🛒</Button>
             </InputGroup.Append>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import API from "../constants";
+import { NavLink } from "react-router-dom";
 import StarRatingComponent from "react-star-rating-component";
-import Item from "./Item";
 
 class Listings extends Component {
   constructor(props) {
@@ -83,7 +83,7 @@ class Listings extends Component {
           <tbody>
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
-                <td><Item display={listing.item_name} item_id={listing.item_id} email={this.props.email} /></td>
+                <td><NavLink to={"item/"+listing.item_id}>{listing.item_name}</NavLink></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
                 <td>{listing.seller_name}</td>
