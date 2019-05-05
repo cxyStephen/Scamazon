@@ -33,13 +33,16 @@ class App extends Component {
 
   componentWillMount() {
     const lsEmail = localStorage.getItem("email");
+    const lsIsCustomer = localStorage.getItem("isCustomer");
+    const lsIsSeller = localStorage.getItem("isSeller");
     if (lsEmail) this.setState({ email: lsEmail });
+    if(lsIsCustomer) this.setState( {isCustomer: lsIsCustomer});
+    if(lsIsSeller) this.setState( {isSeller: lsIsSeller});
   }
 
   componentDidMount() {
     if (this.state.email.length === 0) return;
     let url = API + "/get_user_type?email=" + this.state.email;
-    console.log(url);
     fetch(url)
       .then(res => res.json())
       .then(response => {
@@ -53,8 +56,13 @@ class App extends Component {
   }
 
   handleNewUserType = typeCreated => {
-    if (typeCreated === "customer") this.setState({ isCustomer: true });
-    else if (typeCreated === "seller") this.setState({ isSeller: true });
+    if (typeCreated === "customer") {
+      localStorage.setItem("isCustomer", true);
+      this.setState({ isCustomer: true });
+    } else if (typeCreated === "seller") {
+      localStorage.setItem("isSeller", true);
+      this.setState({ isSeller: true });
+    }
   };
 
   handleLogin = email => {
@@ -65,7 +73,9 @@ class App extends Component {
   };
   handleLogout = () => {
     this.setState({ email: "", isCustomer: false, isSeller: false });
-    localStorage.setItem("email", "");
+    localStorage.removeItem("email");
+    localStorage.removeItem("isCustomer");
+    localStorage.removeItem("isCustomer");
     this.props.history.push("/");
   };
 }
