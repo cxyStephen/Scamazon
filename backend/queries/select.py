@@ -132,10 +132,10 @@ def distinct_sellers_in_cart(CartID):
     
 def user_is_customer(Email):
     return '''
-    SELECT * FROM customer WHERE Email={}
+    SELECT FirstName, LastName FROM customer WHERE Email={}
     '''.format(Email)
 
 def user_is_seller(Email):
     return '''
-    SELECT * FROM seller WHERE Email={}
+    SELECT DisplayName FROM seller WHERE Email={}
     '''.format(Email)

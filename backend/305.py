@@ -296,9 +296,13 @@ def get_payments():
 
     out = []
     for val in query:
+        exp_date = str(val[3])
+        if (exp_date != 'None'):
+            exp_date = exp_date[-2:] + "/" + exp_date[0:-2]
+        else:
+            exp_date = 'N/A'
         out.append({'payment_id': val[0], 'payment_type': val[1], 'payment_key': val[2],
-                    'exp_date': str(val[3])[-2:] + "/" + str(val[3])[0:-2],
-                    'cvv': val[4], 'billing_address': val[5]})
+                    'exp_date': exp_date, 'cvv': val[4], 'billing_address': val[5]})
 
     return jsonify(success=True, payments=out), 200
 
@@ -465,6 +469,31 @@ def get_user_type():
         return error_response(e)
 
     return jsonify(success=True, customer=is_customer, seller=is_seller), 200
+
+@app.route('/get_user_names', methods=['GET'])
+def get_user_names():
+    query = g.cursor
+    req = request.args
+    user = '"{}"'.format(req.get('email'))
+
+    first_name = None
+    last_name  = None
+    store_name = None
+    try:
+        query.execute(select.user_is_customer(user))
+        val = query.fetchone()
+        if (val):
+            first_name = val[0]
+            last_name  = val[1]
+
+        query.execute(select.user_is_seller(user))
+        val = query.fetchone()
+        if (val):
+            store_name = val[0]
+    except Exception as e:
+        return error_response(e)
+
+    return jsonify(success=True, first_name=first_name, last_name=last_name, store_name=store_name), 200
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -637,6 +666,9 @@ def purchase_cart():
                         'quantity': val[3], 'price': val[4]})
             price += val[4] * val[3]
 
+        if (len(cart_contents) == 0):
+            return error_response('Cannot checkout empty cart!')
+
         #get shipping price
         query.execute(select.ship_price(shipc, ships))
         ship_price = query.fetchone()[0]
@@ -682,7 +714,7 @@ def purchase_cart():
     except Exception as e:
         return error_response(e)
 
-    return jsonify(success=True, message="successfully checked out user " + email)
+    return jsonify(success=True, num_shipments=len(sellers), subtotal_cost=price, ship_cost=ship_price)
 
 def error_response(e):
     return jsonify(success=False, message=str(e)), 500
