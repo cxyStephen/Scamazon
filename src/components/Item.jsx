@@ -66,12 +66,13 @@ class Item extends Component {
             <b>Category:</b> {item.category}
             <p></p>
           <h4>Sold by:</h4>
-            <table className="table table-bordered table-hover">
-          <thead>
+          <table className="table table-hover table-borderless">
+          <thead className="thead-dark">
             <tr width = "600">
               <th>Seller</th>
               <th>Price</th>
               <th>Stock</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

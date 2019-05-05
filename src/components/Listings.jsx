@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import API from "../constants";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import StarRatingComponent from "react-star-rating-component";
 
 class Listings extends Component {
@@ -77,7 +77,7 @@ class Listings extends Component {
             </select>
           </label>
         </div>
-        <table className="table table-hover table-sm table-borderless table-striped">
+        <table className="table table-hover table-sm table-borderless">
           <thead className="thead-dark">
             <tr>
               <th>Item</th>
@@ -91,7 +91,7 @@ class Listings extends Component {
           <tbody>
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
-                <td><NavLink to={"item/"+listing.item_id}>{listing.item_name}</NavLink></td>
+                <td><Link to={"item/"+listing.item_id}>{listing.item_name}</Link></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
                 <td>{listing.seller_name}</td>

@@ -58,7 +58,7 @@ class Items extends Component {
             </select>
           </label>
         </div>
-        <table className="table table-bordered table-hover table-sm table-borderless table-striped">
+        <table className="table table-bordered table-hover table-sm table-borderless">
           <thead className="thead-dark">
             <tr>
               <th>ID</th>
@@ -79,9 +79,7 @@ class Items extends Component {
                 <td>{item.category}</td>
                 <td>
                   <Link to={"/createlisting/" + item.item_id}>
-                    <button className="btn btn-primary" onClick={this.handleInputChange}>
                       Create Listing
-                    </button>
                   </Link>
                 </td>
               </tr>
