@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 class Items extends Component {
   constructor(props) {
@@ -77,10 +78,10 @@ class Items extends Component {
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>
                 <td>
-                  <Link to={"/createlisting/" + item.item_id}>
-                    <button className="btn btn-primary" onClick={this.handleInputChange}>
+                  <Link to={"/createlisting/" + item.item_id} name={item.name}>
+                    <Button className="btn btn-primary" size="sm">
                       Create Listing
-                    </button>
+                    </Button>
                   </Link>
                 </td>
               </tr>
