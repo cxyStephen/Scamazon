@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import API from "../constants";
 import Alert from "react-bootstrap/Alert";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 class NewAddress extends Component {
   state = {
@@ -14,11 +14,14 @@ class NewAddress extends Component {
     city: "",
     state: "",
     zip: "",
-    error: ""
+    error: "",
+    createdAddress: false
   };
 
   render() {
     if (this.props.email.length === 0) return <Redirect to="/user" />;
+    if (this.state.createdAddress)
+      return <Redirect to="/user/account/address" />;
     let errorAlert;
     if (this.state.error.length > 0)
       errorAlert = <Alert variant="danger">{this.state.error}</Alert>;
@@ -145,7 +148,7 @@ class NewAddress extends Component {
       .then(res => res.json())
       .then(response => {
         console.log(response.success + "\n" + response.message);
-        if (response.success) this.props.history.push("/user/account/address");
+        if (response.success) this.setState({ createdAddress: true });
         else if (!response.success && this._isMounted) {
           this.setState({ error: response.message });
         }

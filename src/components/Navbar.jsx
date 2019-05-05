@@ -39,7 +39,9 @@ class NavBar extends Component {
             </LinkContainer>
             {button}
           </Nav>
-          <Button>Cart</Button>
+          <LinkContainer to="/cart">
+            <Button>Cart</Button>
+          </LinkContainer>
         </Navbar.Collapse>
       </Navbar>
     );

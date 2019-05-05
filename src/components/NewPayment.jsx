@@ -16,7 +16,8 @@ class NewPayment extends Component {
     name: "",
     billing: "",
     userAddresses: "",
-    error: ""
+    error: "",
+    createdPayment: false
   };
 
   componentDidMount() {
@@ -39,6 +40,8 @@ class NewPayment extends Component {
 
   render() {
     if (this.props.email.length === 0) return <Redirect to="/user" />;
+    if (this.state.createdPayment)
+      return <Redirect to="/user/account/payment" />;
     let errorAlert;
     if (this.state.error.length > 0)
       errorAlert = <Alert variant="danger">{this.state.error}</Alert>;
@@ -137,25 +140,25 @@ class NewPayment extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    console.log("SUBMIT");
     if (this.state.type !== "Paypal" && !this.isValidForm()) return;
     const url = API + "/create_payment";
     let data;
     if (this.state.type !== "Paypal") {
       data = JSON.stringify({
-          type: this.state.type,
-          key: this.state.key,
-          exp: this.state.exp,
-          cvv: this.state.cvv,
-          billing: this.state.billing,
-          user: this.props.email
+        type: this.state.type,
+        key: this.state.key,
+        exp: this.state.exp,
+        cvv: this.state.cvv,
+        billing: this.state.billing,
+        user: this.props.email
       });
-    }
-    else{
-        data = JSON.stringify({
-            type: this.state.type,
-            key: this.state.key,
-            user: this.props.email
-        })
+    } else {
+      data = JSON.stringify({
+        type: this.state.type,
+        key: this.state.key,
+        user: this.props.email
+      });
     }
     fetch(url, {
       method: "POST",
@@ -167,7 +170,7 @@ class NewPayment extends Component {
       .then(res => res.json())
       .then(response => {
         console.log(response.success + "\n" + response.message);
-        if (response.success) this.props.history.push("/user/account/payment");
+        if (response.success) this.setState({ createdPayment: true });
         else if (!response.success && this._isMounted) {
           this.setState({ error: response.message });
         }
