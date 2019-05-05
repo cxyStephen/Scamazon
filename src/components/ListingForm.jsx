@@ -77,7 +77,7 @@ class ListingForm extends Component {
                 type="email"
                 value={this.state.seller}
                 onChange={this.handleInputChange}
-                readonly="readonly"
+                readOnly
               />
             </label>
           </div>

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import API from "../constants";
+import {NavLink} from "react-router-dom";
+import {FormControl} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 class CartPage extends Component {
 
@@ -51,11 +54,11 @@ class CartPage extends Component {
                     {contents.map((content, index) => (
                         <tr key={index}>
                             <td>{content.item_id}</td>
-                            <td>{content.item_name}</td>
+                            <td><NavLink to={"item/"+content.item_id}>{content.item_name}</NavLink></td>
                             <td>{content.seller}</td>
                             <td>${(content.price / 100).toFixed(2)}</td>
-                            <td>{content.quantity}</td>
-                            <td><button type="button" className="btn btn-danger">X</button></td>
+                            <td><FormControl size="sm" defaultValue={content.quantity} type="number" ref="quantity"/></td>
+                            <td><Button type="button" className="btn btn-danger" size="sm">X</Button></td>
                         </tr>
                     ))}
                 </tbody>

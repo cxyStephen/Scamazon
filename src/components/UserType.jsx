@@ -21,7 +21,7 @@ class UserType extends Component {
 
   render() {
     if (this.props.email.length === 0) return <Redirect to="/user" />;
-    let customerForm, sellerForm;
+    let customerForm, sellerForm, userType = "", errorAlert;
     if (this.state.createCustomer)
       customerForm = (
         <div>
@@ -66,7 +66,9 @@ class UserType extends Component {
           </Button>
         </div>
       );
-    let errorAlert;
+
+    if(this.props.isCustomer) userType = "customer";
+    if(this.props.isSeller) userType += userType.length>0 ? " and a seller" : "seller"
 
     if (this.state.error.length > 0)
       errorAlert = <Alert variant="danger">{this.state.error}</Alert>;
@@ -75,6 +77,7 @@ class UserType extends Component {
       <Form>
         {errorAlert}
         <div className="text-md-left m-3">
+          <div>You are a {userType}</div>
           <Form.Group>
             <Form.Label as="legend" column sm={2}>
               Register as a:
@@ -150,9 +153,10 @@ class UserType extends Component {
     })
       .then(res => res.json())
       .then(response => {
+        console.log(response.success + "\n" + response.message);
         if (response.success) {
+          this.props.onNewUserType(this.state.createCustomer? "customer" :"seller");
           this.props.history.push("/");
-          console.log(response);
         } else {
           this.setState({ error: response.message });
         }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
+import Button from "react-bootstrap/Button";
 
 class Items extends Component {
   constructor(props) {
@@ -37,6 +38,10 @@ class Items extends Component {
     }
     console.log(parseInt(items[0].item_rating));
     this.setState({ sort_by: sort_by, items: items });
+  };
+
+  handleNewListing = e => {
+
   }
 
   render() {
@@ -65,6 +70,7 @@ class Items extends Component {
               <th>Description</th>
               <th>Manufacturer</th>
               <th>Category</th>
+              <th>Sell</th>
             </tr>
           </thead>
           <tbody>
@@ -75,6 +81,9 @@ class Items extends Component {
                 <td>{item.desc}</td>
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>
+                <td>
+                  <Button onClick={this.handleNewListing} size="sm">Sell</Button>
+                </td>
               </tr>
             ))}
           </tbody>
