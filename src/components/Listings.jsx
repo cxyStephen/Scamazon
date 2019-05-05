@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import API from "../constants";
 import { Link } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import StarRatingComponent from "react-star-rating-component";
 
 class Listings extends Component {
@@ -8,8 +11,11 @@ class Listings extends Component {
     super(props);
     this.state = {
       listings: [],
-      sortBy: ""
+      sort_by: "",
+      item_filter: "",
+      seller_filter: ""
     };
+    this.allListings = [];
   }
 
   componentDidMount() {
@@ -20,16 +26,31 @@ class Listings extends Component {
           (a, b) => parseInt(b.item_rating) - parseInt(a.item_rating)
         );
         this.setState({ listings: data.listings });
+        this.allListings = [...data.listings];
       })
       .catch(error => console.error(error));
   }
 
   handleInputChange = e => {
     const { listings } = this.state;
-    const sortBy = e.target.value;
+    const sort_by = e.target.value;
     // eslint-disable-next-line default-case
-    switch (sortBy) {
-      case "itemRating":
+    this.listingSort(listings, sort_by);
+    this.setState({ sort_by: sort_by, listings: listings });
+  };
+
+  handleFilterChange = e => {
+    const target = e.target;
+    if (target.name === "item_filter")
+      this.listingFilter(target.value, this.state.seller_filter);
+    else
+      this.listingFilter(this.state.item_filter, target.value);
+    this.setState({ [target.name]: target.value });
+  }
+
+  listingSort = (listings, sort_by) => {
+    switch (sort_by) {
+      case "item_rating":
         listings.sort(
           (a, b) => parseInt(b.item_rating) - parseInt(a.item_rating)
         );
@@ -51,8 +72,18 @@ class Listings extends Component {
       case "lowestPrice":
         listings.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     }
-    this.setState({ sortBy: sortBy, listings: listings });
-  };
+  }
+
+  listingFilter = (item_filter, seller_filter) => {
+    item_filter = item_filter.toLowerCase();
+    seller_filter = seller_filter.toLowerCase();
+    let newListings = this.allListings.filter(
+      listing =>
+        listing.item_name.toLowerCase().includes(item_filter)
+          && listing.seller_name.toLowerCase().includes(seller_filter));
+    this.listingSort(newListings, this.state.sort_by);
+    this.setState({ listings: newListings });
+  }
 
   render() {
     let { listings } = this.state;
@@ -60,24 +91,40 @@ class Listings extends Component {
     return (
       <div className="container">
         <h3 align="left">Listings</h3>
-        <div className="form-group" align="right">
-          <label>
-            Sort By:
-            <select
-              name="sortBy"
-              value={this.state.sortBy}
-              onChange={this.handleInputChange}
-            >
-              <option value="itemRating">Item Rating</option>
-              <option value="sellerRating">Seller Rating</option>
-              <option value="item">Item</option>
-              <option value="seller">Seller</option>
-              <option value="highestPrice">Highest Price</option>
-              <option value="lowestPrice">Lowest Price</option>
-            </select>
-          </label>
-        </div>
-        <table className="table table-hover table-sm table-borderless">
+        <Form>
+          <Row>
+            <Col align="left">
+              <b>Filter by:</b>
+            </Col>
+            <Col align="right">
+              <b>Sort by:</b>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={5}>
+              <Form.Control placeholder="Item name" onChange={this.handleFilterChange} name="item_filter"/>
+            </Col>
+            <Col xs={5}>
+              <Form.Control placeholder="Seller name" onChange={this.handleFilterChange} name="seller_filter"/>
+            </Col>
+            <Col xs={2}>
+              <div className="form-group" align="right">
+                <select
+                  name="sort_by"
+                  value={this.state.sort_by}
+                  onChange={this.handleInputChange}
+                  class="custom-select"
+                >
+                  <option value="item_rating">Item Rating</option>
+                  <option value="seller_rating">Seller Rating</option>
+                  <option value="item">Item</option>
+                  <option value="seller">Seller</option>
+                </select>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+        <table className="table table-hover table-sm table-borderless table-striped">
           <thead className="thead-dark">
             <tr>
               <th>Item</th>
