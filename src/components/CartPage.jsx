@@ -15,7 +15,7 @@ class CartPage extends Component {
 
     componentDidMount() {
         const path = "/get_cart";
-        const query = "?user=" + "sc3@example.com";
+        const query = "?user=" + this.props.email;
         if (query.length === 6) 
             return;
         fetch(API + path + query)

@@ -1,34 +1,8 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import StarRatingComponent from 'react-star-rating-component';
 import API from "../constants";
 import AddToCart from "./AddToCart";
-
-const backdropStyle = {
-  position: 'fixed',
-  zIndex: 1040,
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  backgroundColor: '#000',
-  opacity: 0.7
-};
-
-const modalStyle = function() {
-  return {
-    position: 'fixed',
-    width: 650,
-    zIndex: 1040,
-    top: 0,
-    left: 0,
-    backgroundColor: 'white',
-    boxShadow: '0 5px 15px rgba(0,0,0,.5)',
-    padding: 0
-  };
-};
 
 class Item extends Component {
   constructor(...args) {
@@ -41,21 +15,17 @@ class Item extends Component {
         manufacturer: "",
         name: ""
     }};
+  }
 
-    this.close = () => {
-      this.setState({ showModal: false });
-    };
-
-    this.open = () => {
-
-      let url = API + "/get_item?";
-      let query = "item_id=" + this.props.item_id;
+  componentDidMount() {
+    let url = API + "/get_item?";
+      let query = "item_id=" + this.props.match.params.item_id;
       fetch(url + query)
       .then(response => response.json())
       .then(data => this.setState({item: data.item}))
       .then(() => {
         url = API + "/get_reviews?";
-        query = "type=item&id=" + this.props.item_id;
+        query = "type=item&id=" + this.props.match.params.item_id;
         fetch(url + query)
         .then(response => response.json())
         .then(data => this.setState({reviews: data.reviews, rating: data.average_rating}))
@@ -70,11 +40,6 @@ class Item extends Component {
       .catch(error => console.error(error));
       
       this.setState({ showModal: true });
-    };
-  }
-
-  renderBackdrop = (props) => {
-    return <div {...props} style={backdropStyle} />;
   }
 
   render() {
@@ -85,17 +50,6 @@ class Item extends Component {
     const listings = this.state.listings;
 
     return (
-      <div className="item-modal">
-        <Button onClick={this.open}>{this.props.display}</Button>
-
-        <Modal
-          onHide={this.close}
-          style={modalStyle()}
-          aria-labelledby="modal-label"
-          show={this.state.showModal}
-          renderbackdrop={this.renderBackdrop}
-        >
-        {item.item_id !== -1 &&
           <table className="table">
           <tbody>
             <tr><td width="650">
@@ -159,9 +113,6 @@ class Item extends Component {
             </tr>
             </tbody>
           </table>
-        }
-        </Modal>
-      </div>
     );
   }
 }

@@ -7,7 +7,7 @@ class ListingForm extends Component {
     super(props);
     this.state = {
       item: "",
-      seller: "",
+      seller: this.props.email,
       quantity: "",
       price: ""
     };
@@ -77,8 +77,7 @@ class ListingForm extends Component {
                 type="email"
                 value={this.state.seller}
                 onChange={this.handleInputChange}
-                placeholder="Enter your email"
-                required
+                readonly="readonly"
               />
             </label>
           </div>

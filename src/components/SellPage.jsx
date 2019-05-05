@@ -10,7 +10,7 @@ class SellPage extends Component {
             <h1 align="center">What do you want to sell today?</h1>
             <Items />
             <ItemForm />
-            <ListingForm />
+            <ListingForm email={this.props.email}/>
           </div>
         );
     }
