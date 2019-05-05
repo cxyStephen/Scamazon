@@ -114,8 +114,7 @@ class userAuth extends Component {
             this.setState({ loggedIn: true });
           }
         } else if (!response.success && this._isMounted) {
-            console.log("errorrr")
-          this.setState({ error: response.message });
+            this.setState({error: response.message});
         }
       })
       .catch(error => console.error(error));

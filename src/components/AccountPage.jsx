@@ -10,6 +10,9 @@ class AccountPage extends Component {
       <Container>
         <div>You are currently logged in as '{this.props.email}'</div>
         <Row className="justify-content-md-center">
+          <NavLink to="account/type">Account type</NavLink>
+        </Row>
+        <Row className="justify-content-md-center">
           <NavLink to="account/address">Your addresses</NavLink>
         </Row>
         <Row className="justify-content-md-center">

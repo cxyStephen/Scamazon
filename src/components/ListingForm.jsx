@@ -60,7 +60,7 @@ class ListingForm extends Component {
                 name="item"
                 value={this.state.item}
                 onChange={this.handleInputChange}
-                readonly="readonly"
+                readOnly
               />
             </label>
           </div>

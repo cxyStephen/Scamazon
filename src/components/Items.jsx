@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 class Items extends Component {
   constructor(props) {
@@ -36,7 +37,6 @@ class Items extends Component {
           (a, b) => a.category.localeCompare(b.category)
       );
     }
-    //console.log(parseInt(items[0].item_rating));
     this.setState({ sortBy: sortBy, items: items });
   }
 
@@ -78,8 +78,10 @@ class Items extends Component {
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>
                 <td>
-                  <Link to={"/createlisting/" + item.item_id}>
+                  <Link to={"/createlisting/" + item.item_id} name={item.name}>
+                    <Button className="btn btn-primary" size="sm">
                       Create Listing
+                    </Button>
                   </Link>
                 </td>
               </tr>

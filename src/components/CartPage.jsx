@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import API from "../constants";
+import {Link} from "react-router-dom";
+import {FormControl} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 class CartPage extends Component {
 
@@ -75,7 +78,21 @@ class CartPage extends Component {
                 }
               })
               .catch(error => console.error(error));
-        } else if (e.target.name === "updateQuantity") { 
+        } 
+        /*
+        <td>
+            <input 
+                name="updateQuantity"
+                type="number"
+                min="0"
+                step="1"
+                value={this.state.contents[index].quantity}
+                onChange={e => this.handleInputChange(e, content, index)}
+                placeholder={content.quantity}
+            />
+        </td>
+        
+        else if (e.target.name === "updateQuantity") { 
             console.log(e.target.value);
             this.setState(prevState => {
                 const updatedContents = prevState.contents.map((content, index) => {
@@ -89,6 +106,7 @@ class CartPage extends Component {
                 }
             });
         }
+        */
     }
 
     render() {
@@ -108,30 +126,21 @@ class CartPage extends Component {
                 </thead>
                 <tbody>
                     {contents.map((content,index) => (
-                        <tr key={content}>
-                            <td>{content.item_name}</td>
+                        <tr key={index}>
+                            <td><Link to={"item/"+content.item_id}>{content.item_name}</Link></td>
                             <td>{content.seller}</td>
                             <td>${(content.price / 100).toFixed(2)}</td>
+                            <td><FormControl size="sm" defaultValue={content.quantity} type="number" ref="quantity"/></td>
                             <td>
-                                <input 
-                                    name="updateQuantity"
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    value={this.state.contents[index].quantity}
-                                    onChange={e => this.handleInputChange(e, content, index)}
-                                    placeholder={content.quantity}
-                                />
-                            </td>
-                            <td>
-                                <button 
+                                <Button 
                                     name="delete" 
                                     type="button" 
                                     className="btn btn-danger" 
+                                    size="sm"
                                     onClick={e => this.handleInputChange(e, content)}
                                 >
-                                    Remove
-                                </button>
+                                    X
+                                </Button>
                             </td>
                         </tr>
                     ))}
