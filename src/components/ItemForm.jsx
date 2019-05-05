@@ -6,6 +6,7 @@ class ItemForm extends Component {
     super(props);
     this.state = {
       name: "",
+      image_url: "",
       desc: "",
       manufacturer: "",
       category: "",
@@ -93,6 +94,19 @@ class ItemForm extends Component {
                 onChange={this.handleInputChange}
                 placeholder="Enter a name"
                 required
+              />
+            </label>
+          </div>
+          <div className="form-group">
+            <label>
+              Item Image URL:
+              <input
+                className="form-control"
+                name="image_url"
+                type="text"
+                value={this.state.image_url}
+                onChange={this.handleInputChange}
+                placeholder="Enter an image URL"
               />
             </label>
           </div>
