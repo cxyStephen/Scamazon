@@ -123,38 +123,46 @@ class AddressPage extends Component {
   handleDelete = () => {
     const url = API + "/modify_address";
     const email = this.props.email;
-    const { selectedAddresses } = this.state;
+    let { selectedAddresses } = this.state;
     let change = false;
+    let failedDeletes = [];
+    let promises = [];
 
-    // console.log(
-    //   this.state.addresses.filter(
-    //     x => !selectedAddresses.includes(x.address_id.toString())
-    //   )
-    // );
-
-    for (let i = 0; i < selectedAddresses.length; i++) {
-      fetch(url, {
-        method: "DELETE",
-        body: JSON.stringify({ id: selectedAddresses[i], user: email }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
-        .then(response => {
-          console.log(response.success + "\n" + response.message);
-          if (response.success) change = true;
-          if (!response.success) this.setState({ error: response.message });
-          if (change && i === selectedAddresses.length - 1) {
-            let newAddresses = this.state.addresses.filter(
-              x => !selectedAddresses.includes(x.address_id.toString())
-            );
-            console.log(newAddresses);
-            this.setState({ addresses: newAddresses });
+    selectedAddresses.forEach(x =>
+      promises.push(
+        fetch(url, {
+          method: "DELETE",
+          body: JSON.stringify({ id: x, user: email }),
+          headers: {
+            "Content-Type": "application/json"
           }
         })
-        .catch(error => console.error(error));
-    }
+          .then(res => res.json())
+          .then(response => {
+            console.log(response.success + "\n" + response.message);
+            if (response.success) change = true;
+            else failedDeletes.push(x);
+          })
+          .catch(error => console.error(error))
+      )
+    );
+
+    Promise.all(promises).then(() => {
+      if (change) {
+        console.log(failedDeletes);
+        let newAddresses = this.state.addresses.filter(
+          x => !failedDeletes.includes(x.address_id.toString())
+        );
+        console.log(newAddresses);
+        this.setState({
+          addresses: newAddresses,
+          error:
+            failedDeletes.length > 0
+              ? "Failed to delete one or more addresses"
+              : ""
+        });
+      }
+    });
   };
 }
 export default AddressPage;

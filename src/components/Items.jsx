@@ -26,16 +26,14 @@ class Items extends Component {
   handleInputChange = e => {
     const {items} = this.state;
     const sort_by = e.target.value;
-    switch (sort_by) {
-      case "item":
-        items.sort(
+    if (sort_by === "item") {
+      items.sort(
           (a, b) => a.name.localeCompare(b.name)
-        );
-        break;
-      case "category":
-        items.sort(
+      );
+    } else if (sort_by === "category") {
+      items.sort(
           (a, b) => a.category.localeCompare(b.category)
-        );
+      );
     }
     console.log(parseInt(items[0].item_rating));
     this.setState({ sort_by: sort_by, items: items });

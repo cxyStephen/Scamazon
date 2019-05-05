@@ -44,6 +44,12 @@ class Listings extends Component {
         break;
       case "seller":
         listings.sort((a, b) => a.seller_name.localeCompare(b.seller_name));
+        break;
+      case "priceDes":
+        listings.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+        break;
+      case "priceAsc":
+        listings.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     }
     this.setState({ sort_by: sort_by, listings: listings });
   };
@@ -66,6 +72,8 @@ class Listings extends Component {
               <option value="seller_rating">Seller Rating</option>
               <option value="item">Item</option>
               <option value="seller">Seller</option>
+              <option value="priceDes">Descending Price</option>
+              <option value="priceAsc">Ascending Price</option>
             </select>
           </label>
         </div>
@@ -85,7 +93,13 @@ class Listings extends Component {
             {listings.map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
                 <td>{listing.item_id}</td>
-                <td><Item display={listing.item_name} item_id={listing.item_id} email={this.props.email} /></td>
+                <td>
+                  <Item
+                    display={listing.item_name}
+                    item_id={listing.item_id}
+                    email={this.props.email}
+                  />
+                </td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
                 <td>{listing.seller_name}</td>
