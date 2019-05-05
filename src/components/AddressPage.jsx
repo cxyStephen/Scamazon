@@ -116,7 +116,7 @@ class AddressPage extends Component {
   handleSelect = e => {
     let { selectedAddresses } = this.state;
     if (e.target.checked) selectedAddresses.push(e.target.id);
-    else selectedAddresses.splice(selectedAddresses.indexOf(e.target.id));
+    else selectedAddresses.splice(selectedAddresses.indexOf(e.target.id), 1);
     this.setState({ selectedAddresses });
   };
 
@@ -125,7 +125,7 @@ class AddressPage extends Component {
     const email = this.props.email;
     let { selectedAddresses } = this.state;
     let change = false;
-    let failedDeletes = [];
+    let deleted = [];
     let promises = [];
 
     selectedAddresses.forEach(x =>
@@ -140,28 +140,29 @@ class AddressPage extends Component {
           .then(res => res.json())
           .then(response => {
             console.log(response.success + "\n" + response.message);
-            if (response.success) change = true;
-            else failedDeletes.push(x);
+            if (response.success) {
+              change = true;
+              deleted.push(x);
+            }
           })
           .catch(error => console.error(error))
       )
     );
 
     Promise.all(promises).then(() => {
+      let newAddresses = this.state.addresses;
       if (change) {
-        console.log(failedDeletes);
-        let newAddresses = this.state.addresses.filter(
-          x => !failedDeletes.includes(x.address_id.toString())
+        newAddresses = this.state.addresses.filter(
+          x => !deleted.includes(x.address_id.toString())
         );
-        console.log(newAddresses);
-        this.setState({
-          addresses: newAddresses,
-          error:
-            failedDeletes.length > 0
-              ? "Failed to delete one or more addresses"
-              : ""
-        });
       }
+      this.setState({
+        addresses: newAddresses,
+        error:
+          deleted.length !== selectedAddresses.length
+            ? "Failed to delete one or more addresses"
+            : ""
+      });
     });
   };
 }
