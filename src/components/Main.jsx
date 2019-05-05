@@ -7,25 +7,38 @@ import AddressPage from "./AddressPage";
 import NewAddress from "./NewAddress";
 import MarketplacePage from "./MarketplacePage";
 import CartPage from "./CartPage";
-import SellPage from "./SellPage"
-import PaymentPage from "./PaymentPage"
-import NewPayment from "./NewPayment"
-import Item from "./Item"
+import SellPage from "./SellPage";
+import PaymentPage from "./PaymentPage";
+import NewPayment from "./NewPayment";
+import Item from "./Item";
+import ListingForm from "./ListingForm";
 
 class Main extends Component {
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path="/" render={props => (
+          <Route 
+            exact path="/" 
+            render={props => 
               <MarketplacePage {...props} email={this.props.email} />
-            )} />
-          <Route exact path="/sell" render={props => (
+            } 
+          />
+          <Route 
+            exact path="/sell" 
+            render={props => 
               <SellPage {...props} email={this.props.email} />
-            )} />
+            } 
+          />
+          <Route exact path="/createlisting/:item_id" 
+              render={props => (
+                <ListingForm {...props} email={this.props.email} />
+              )} 
+          />
           <Route exact path="/cart" render={props => (
               <CartPage {...props} email={this.props.email} />
-            )} />
+            )} 
+          />
           <Route
             exact path="/user"
             render={props => (

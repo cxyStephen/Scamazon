@@ -6,7 +6,7 @@ class ListingForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: "",
+      item: this.props.match.params.item_id,
       seller: this.props.email,
       quantity: "",
       price: ""
@@ -58,24 +58,7 @@ class ListingForm extends Component {
               <input
                 className="form-control"
                 name="item"
-                type="number"
-                min="1"
-                step="1"
                 value={this.state.item}
-                onChange={this.handleInputChange}
-                placeholder="Enter an Item ID"
-                required
-              />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              Your Email:
-              <input
-                className="form-control"
-                name="seller"
-                type="email"
-                value={this.state.seller}
                 onChange={this.handleInputChange}
                 readonly="readonly"
               />

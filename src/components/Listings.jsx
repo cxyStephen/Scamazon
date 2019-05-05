@@ -8,7 +8,7 @@ class Listings extends Component {
     super(props);
     this.state = {
       listings: [],
-      sort_by: ""
+      sortBy: ""
     };
   }
 
@@ -26,15 +26,15 @@ class Listings extends Component {
 
   handleInputChange = e => {
     const { listings } = this.state;
-    const sort_by = e.target.value;
+    const sortBy = e.target.value;
     // eslint-disable-next-line default-case
-    switch (sort_by) {
-      case "item_rating":
+    switch (sortBy) {
+      case "itemRating":
         listings.sort(
           (a, b) => parseInt(b.item_rating) - parseInt(a.item_rating)
         );
         break;
-      case "seller_rating":
+      case "sellerRating":
         listings.sort(
           (a, b) => parseInt(b.seller_rating) - parseInt(a.seller_rating)
         );
@@ -45,13 +45,13 @@ class Listings extends Component {
       case "seller":
         listings.sort((a, b) => a.seller_name.localeCompare(b.seller_name));
         break;
-      case "priceDes":
+      case "highestPrice":
         listings.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
         break;
-      case "priceAsc":
+      case "lowestPrice":
         listings.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     }
-    this.setState({ sort_by: sort_by, listings: listings });
+    this.setState({ sortBy: sortBy, listings: listings });
   };
 
   render() {
@@ -64,16 +64,16 @@ class Listings extends Component {
           <label>
             Sort By:
             <select
-              name="sort_by"
-              value={this.state.sort_by}
+              name="sortBy"
+              value={this.state.sortBy}
               onChange={this.handleInputChange}
             >
-              <option value="item_rating">Item Rating</option>
-              <option value="seller_rating">Seller Rating</option>
+              <option value="itemRating">Item Rating</option>
+              <option value="sellerRating">Seller Rating</option>
               <option value="item">Item</option>
               <option value="seller">Seller</option>
-              <option value="priceDes">Descending Price</option>
-              <option value="priceAsc">Ascending Price</option>
+              <option value="highestPrice">Highest Price</option>
+              <option value="lowestPrice">Lowest Price</option>
             </select>
           </label>
         </div>
