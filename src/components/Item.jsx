@@ -4,10 +4,12 @@ import StarRatingComponent from "react-star-rating-component";
 import API from "../constants";
 import Image from "react-bootstrap/Image";
 import AddToCart from "./AddToCart";
+import ReviewForm from "./ReviewForm";
 
 class Item extends Component {
   constructor(...args) {
     super(...args);
+    this.loadReviews = this.loadReviews.bind(this);
     this.state = {
       showModal: false,
       reviews: [],
@@ -20,7 +22,8 @@ class Item extends Component {
         item_id: -1,
         manufacturer: "",
         name: ""
-      }
+      },
+      showReviewForm: false
     };
   }
 
@@ -31,18 +34,7 @@ class Item extends Component {
       .then(response => response.json())
       .then(data => this.setState({ item: data.item, images: data.images }))
       .then(() => {
-        url = API + "/get_reviews?";
-        query = "type=item&id=" + this.props.match.params.item_id;
-        fetch(url + query)
-          .then(response => response.json())
-          .then(data =>
-            this.setState({
-              reviews: data.reviews,
-              rating: data.average_rating
-            })
-          )
-          .catch(error => console.error(error));
-
+        this.loadReviews();
         url = API + "/get_listings?";
         fetch(url + query)
           .then(response => response.json())
@@ -52,6 +44,28 @@ class Item extends Component {
       .catch(error => console.error(error));
 
     this.setState({ showModal: true });
+  }
+
+  loadReviews() {
+    const url = API + "/get_reviews?";
+    const query = "type=item&id=" + this.props.match.params.item_id;
+    fetch(url + query)
+      .then(response => response.json())
+      .then(data =>
+        {
+          let showRF = true;
+          data.reviews.forEach(e=>{
+            if (e.user === this.props.email)
+              showRF = false;
+          });
+          this.setState({
+            reviews: data.reviews,
+            rating: data.average_rating,
+            showReviewForm: showRF
+          });
+        }
+      )
+      .catch(error => console.error(error));
   }
 
   render() {
@@ -127,6 +141,16 @@ class Item extends Component {
           </div>
 
           <div class="col-md">
+            {(this.state.item.item_id != -1 && this.state.showReviewForm) &&
+            <div>
+              <ReviewForm
+                email={this.props.email}
+                type="item"
+                id={this.state.item.item_id}
+                onSubmit={this.loadReviews}
+              />
+              <hr />
+            </div>}
             <h4>Reviews:</h4>
             <div>
               {reviews.map(review => (
