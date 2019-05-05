@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
-import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 class Items extends Component {
   constructor(props) {
     super(props);
     this.state = {
       items: [], 
-      sort_by: ""
+      sortBy: ""
     };
   }
 
@@ -26,22 +26,17 @@ class Items extends Component {
 
   handleInputChange = e => {
     const {items} = this.state;
-    const sort_by = e.target.value;
-    if (sort_by === "item") {
+    const sortBy = e.target.value;
+    if (sortBy === "item") {
       items.sort(
           (a, b) => a.name.localeCompare(b.name)
       );
-    } else if (sort_by === "category") {
+    } else if (sortBy === "category") {
       items.sort(
           (a, b) => a.category.localeCompare(b.category)
       );
     }
-    console.log(parseInt(items[0].item_rating));
-    this.setState({ sort_by: sort_by, items: items });
-  };
-
-  handleNewListing = e => {
-
+    this.setState({ sortBy: sortBy, items: items });
   }
 
   render() {
@@ -53,8 +48,8 @@ class Items extends Component {
         <div className="form-group" align="right">
           <label>Sort By:
             <select
-              name="sort_by"
-              value={this.state.sort_by}
+              name="sortBy"
+              value={this.state.sortBy}
               onChange={this.handleInputChange}
             >
               <option value="item">Item</option>
@@ -70,7 +65,7 @@ class Items extends Component {
               <th>Description</th>
               <th>Manufacturer</th>
               <th>Category</th>
-              <th>Sell</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +77,11 @@ class Items extends Component {
                 <td>{item.manufacturer}</td>
                 <td>{item.category}</td>
                 <td>
-                  <Button onClick={this.handleNewListing} size="sm">Sell</Button>
+                  <Link to={"/createlisting/" + item.item_id}>
+                    <button className="btn btn-primary" onClick={this.handleInputChange}>
+                      Create Listing
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}

@@ -11,6 +11,7 @@ import SellPage from "./SellPage";
 import PaymentPage from "./PaymentPage";
 import NewPayment from "./NewPayment";
 import Item from "./Item";
+import ListingForm from "./ListingForm";
 
 class Main extends Component {
   render() {
@@ -18,25 +19,28 @@ class Main extends Component {
       <main>
         <Switch>
           <Route
-            exact
-            path="/"
-            render={props => (
+            exact path="/"
+            render={props =>
               <MarketplacePage {...props} email={this.props.email} />
+            }
+          />
+          <Route
+            exact path="/sell"
+            render={props =>
+              <SellPage {...props} email={this.props.email} />
+            }
+          />
+          <Route exact path="/createlisting/:item_id"
+              render={props => (
+                <ListingForm {...props} email={this.props.email} />
+              )}
+          />
+          <Route exact path="/cart" render={props => (
+              <CartPage {...props} email={this.props.email} />
             )}
           />
           <Route
-            exact
-            path="/sell"
-            render={props => <SellPage {...props} email={this.props.email} />}
-          />
-          <Route
-            exact
-            path="/cart"
-            render={props => <CartPage {...props} email={this.props.email} />}
-          />
-          <Route
-            exact
-            path="/user"
+            exact path="/user"
             render={props => (
               <UserAuth
                 {...props}
@@ -46,8 +50,7 @@ class Main extends Component {
             )}
           />
           <Route
-            exact
-            path="/user/account"
+            exact path="/user/account"
             render={props => (
               <AccountPage {...props} email={this.props.email} />
             )}
