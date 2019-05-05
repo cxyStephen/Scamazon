@@ -42,7 +42,7 @@ class Checkout extends Component {
         if (data.success) {
           this.setState({
             items: data.contents,
-            subtotalPrice: data.subtotal
+            subtotalPrice: data.subtotal/100
           });
         } else {
           this.setState({ error: data.message });
@@ -121,13 +121,9 @@ class Checkout extends Component {
                                 value={data.address_id}
                                 key={data.address_id}
                               >
-                                {data.address +
-                                  " " +
-                                  data.city +
-                                  " " +
-                                  data.state +
-                                  " " +
-                                  data.zip}
+                                {data.address}&emsp;
+                                {data.city}, {data.state} &emsp;
+                                {data.zip}
                               </option>
                             );
                           })}
@@ -193,7 +189,9 @@ class Checkout extends Component {
                       <div style={{ color: "#b12704", fontWeight: "bold" }}>
                         Order total: ${this.state.totalPrice}
                       </div>
-                      <Button variant="success" className="m-md-3">Place order</Button>
+                      <Button variant="success" className="m-md-3">
+                        Place order
+                      </Button>
                     </Form>
                   </td>
                 </tr>
