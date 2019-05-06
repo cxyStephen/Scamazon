@@ -52,6 +52,7 @@ class AddToCart extends Component {
         <InputGroup className="mb-3">
             <FormControl size="sm" defaultValue="1" type="number" ref="quantity"/>
             <InputGroup.Append>
+                {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
             <Button size="sm" onClick={this.addToCart}>🛒</Button>
             </InputGroup.Append>
         </InputGroup>

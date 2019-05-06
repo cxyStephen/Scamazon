@@ -19,7 +19,7 @@ class MyListings extends Component {
         .then(data => {
             if (data.success) {
             this.setState({
-                listings: data.listings
+                listings: data.listings.filter(listing => listing.seller_id === this.props.email)
             });
             } else {
                 this.setState({ error: data.message });
