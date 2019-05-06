@@ -36,6 +36,7 @@ class Item extends Component {
       .then(() => {
         this.loadReviews();
         url = API + "/get_listings?";
+        query = "type=item&id=" + this.props.match.params.item_id;
         fetch(url + query)
           .then(response => response.json())
           .then(data => this.setState({ listings: data.listings }))

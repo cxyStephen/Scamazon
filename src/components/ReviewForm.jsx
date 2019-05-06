@@ -65,7 +65,6 @@ class ReviewForm extends Component {
     .then(data => {
       console.log(data.success + "\n" + data.message);
       if (data.success) {
-        alert("A new review was created.");
         this.props.onSubmit();
       } else {
         alert("Error: " + data.message);
