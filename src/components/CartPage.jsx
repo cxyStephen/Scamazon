@@ -58,30 +58,24 @@ class CartPage extends Component {
         .then(data => {
             console.log(data.success + "\n" + data.message);
             if (data.success) {
-                if (target.name === "deleteItem") {
-                    this.setState(prevState => {
-                        const updatedContents = prevState.contents.filter((content, index) => index !== targetIndex)
-                        return {
-                            contents: updatedContents
-                        }
-                    });
-                } else if (target.name === "updateQuantity") {
+                if (target.name === "updateQuantity") {
                     alert("Item quantity was updated");
-                    const path = "/get_cart";
-                    const query = "?user=" + this.props.email;
-                    if (query.length === 6) 
-                        return;
-                    fetch(API + path + query)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.setState({ 
-                                contents: data.contents, 
-                                subtotal: data.subtotal 
-                            });
-                        }
-                    })
-                    .catch(error => console.error(error));
+                }
+                const path = "/get_cart";
+                const query = "?user=" + this.props.email;
+                if (query.length === 6) 
+                    return;
+                fetch(API + path + query)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.setState({ 
+                            contents: data.contents, 
+                            subtotal: data.subtotal 
+                        });
+                    }
+                })
+                .catch(error => console.error(error));
 
                     /*
                     this.setState(prevState => {
@@ -103,7 +97,6 @@ class CartPage extends Component {
                         };
                     });
                     */
-                }
             }
         })
         .catch(error => console.error(error));
