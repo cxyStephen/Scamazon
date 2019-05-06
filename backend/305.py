@@ -524,7 +524,8 @@ def get_purchases():
                 'speed': Speed,
                 'ship_date': ShipDate,
                 'tracking_num': TrackingNumber,
-                'items': []
+                'items': [],
+                'seller': Seller
             }
             prev_shipmentid = ShipmentID
             purchases[-1]['shipments'].append(shipment)
@@ -532,8 +533,7 @@ def get_purchases():
         item = {
             'item_id': ItemID,
             'item_name': ItemName,
-            'quantity': Quantity,
-            'seller': Seller
+            'quantity': Quantity
         }
         purchases[-1]['shipments'][-1]['items'].append(item)
 
