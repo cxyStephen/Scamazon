@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
+import NavLink from "react-bootstrap/NavLink";
 
 const divStyle = {
   padding: "8px"
@@ -31,7 +32,7 @@ class NavBar extends Component {
     if (this.props.isSeller) {
       sellLink = (
         <LinkContainer to="/sell">
-          <Nav.Link>Sell</Nav.Link>
+          <NavLink>Sell</NavLink>
         </LinkContainer>
       );
     }
@@ -45,7 +46,7 @@ class NavBar extends Component {
           top: "50%"
         }}
       >
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar  />
 
         <LinkContainer to="/">
           <Navbar.Brand>Scamazon</Navbar.Brand>
@@ -54,7 +55,7 @@ class NavBar extends Component {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <LinkContainer to="/user">
-              <Nav.Link>Account</Nav.Link>
+              <NavLink>Account</NavLink>
             </LinkContainer>
             {sellLink}
             {logoutButton}

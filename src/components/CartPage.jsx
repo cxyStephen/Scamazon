@@ -130,6 +130,11 @@ class CartPage extends Component {
             };
         });
     }
+
+    handleCartCheckout = () => {
+        this.props.history.push("/cart/checkout");
+    };
+
     render() {
         const {contents, subtotal} = this.state;
 
@@ -178,7 +183,7 @@ class CartPage extends Component {
                                     type="button" 
                                     className="btn btn-danger" 
                                     size="sm"
-                                    onClick={e => this.deleteItem(e, content, index)}
+                                    onClick={e => this.updateCart(e, content, index)}
                                 >
                                     X
                                 </button>
@@ -189,7 +194,14 @@ class CartPage extends Component {
                 </table>
                 <h5 align="right">Subtotal: ${(subtotal / 100).toFixed(2)}</h5>
                 <div align="right">
-                    <button name="checkout" type="button" className="btn btn-success">Checkout</button>
+                    <button 
+                        name="checkout" 
+                        type="button" 
+                        className="btn btn-success"
+                        onClick={this.handleCartCheckout}
+                    >
+                        Checkout
+                    </button>
                 </div>
             </div>
         );

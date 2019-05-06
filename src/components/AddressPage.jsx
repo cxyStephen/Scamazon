@@ -17,7 +17,6 @@ class AddressPage extends Component {
   };
 
   componentDidMount() {
-    console.log("cmp mount");
     const url = API + "/get_addresses?";
     const email = this.props.email;
     if (email.length === 0) return;

@@ -11,14 +11,14 @@ class ListingForm extends Component {
       quantity: "",
       price: ""
     };
-  }
+  };
 
   handleInputChange = e => {
     const target = e.target;
     this.setState({
       [target.name]: target.value
     });
-  }
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -39,12 +39,13 @@ class ListingForm extends Component {
       console.log(data.success + "\n" + data.message);
       if (data.success) {
         alert("A new listing was created.");
+        this.props.history.push("/sell");
       } else {
         alert("Error: Could not create new listing.");
       }
     })
     .catch(error => console.error(error));
-  }
+  };
 
   render() {
     return (
