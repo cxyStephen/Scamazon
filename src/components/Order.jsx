@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Modal from "react-bootstrap/Modal";
 import ListGroupItem from "react-bootstrap/ListGroupItem";
 import Table from "react-bootstrap/Table";
+import { Link } from "react-router-dom";
 
 class Order extends Component {
   constructor(props, context) {
@@ -72,31 +73,40 @@ class Order extends Component {
                 </tr>
               </thead>
               <tbody>
-                {details.shipments.map(shipment => (
-                  <tr key={shipment.shipment_id}>
-                    <td>
-                      <div>Shipment Date: {shipment.ship_date} </div>
-                      <div>Tracking Number: {shipment.tracking_num}</div>
-                      <div>{shipment.company + " " + shipment.speed}</div>
-                    </td>
-                    <td>
-                      {shipment.items.map(item => (
-                        <div key={item.item_id}>
-                          <div style={{ fontWeight: "bold" }}>
-                            {item.item_name}
-                          </div>
-                          <div>Quantity: {item.quantity}</div>
-                          <div style={{ fontWeight: "bold", color: "#b12704" }}>
-                            Price: $
-                          </div>
-                          <div style={{ color: "#888" }}>
-                            Sold by: {item.seller}
-                          </div>
+                {details.shipments.map(shipment => {
+                  const numItemsInShipment = shipment.items.length - 1;
+                  return (
+                    <tr key={shipment.shipment_id}>
+                      <td>
+                        <div>Shipment Date: {shipment.ship_date} </div>
+                        <div>Tracking Number: {shipment.tracking_num}</div>
+                        <div>{shipment.company + " " + shipment.speed}</div>
+                        <div style={{ color: "#888" }}>
+                          Shipped by: {shipment.seller}{" "}
                         </div>
-                      ))}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td>
+                        {shipment.items.map((item, i) => {
+                          let horizontalBreak =
+                            i < numItemsInShipment ? <hr /> : null;
+                          return (
+                            <div key={item.item_id}>
+                              <Link
+                                to={"item/" + item.item_id}
+                                style={{ fontWeight: "bold" }}
+                              >
+                                {item.item_name}
+                              </Link>
+
+                              <div>Quantity: {item.quantity}</div>
+                              {horizontalBreak}
+                            </div>
+                          );
+                        })}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           </Modal.Body>

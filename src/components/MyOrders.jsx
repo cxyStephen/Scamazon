@@ -5,6 +5,8 @@ import API from "../constants";
 import { Redirect } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
+import Alert from "react-bootstrap/Alert";
+
 
 class MyOrders extends Component {
   state = {
@@ -22,11 +24,13 @@ class MyOrders extends Component {
       .then(response => {
         const orders = response.purchases;
         if (orders.length === 0) {
-          this.setState({ error: "Failed to retrieve your orders" });
+          this.setState({
+            error: "Failed to retrieve your orders"
+          });
           return;
         }
         orders.sort((a, b) => b.order_id - a.order_id);
-        this.setState({ orders: orders });
+        this.setState({ orders: orders});
       })
       .catch(error => console.error(error));
   }
@@ -34,8 +38,11 @@ class MyOrders extends Component {
   render() {
     if (this.props.email.length === 0 || this.props.isCustomer === false)
       return <Redirect to="/user" />;
+    const error =
+      this.state.error.length > 0 ? <Alert>{this.state.error}</Alert> : null;
     return (
       <Container>
+          {error}
         <h1>My Orders</h1>
         <Card>
           <ListGroup variant="flush">
