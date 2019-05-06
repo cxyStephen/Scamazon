@@ -76,8 +76,8 @@ class Item extends Component {
 
     return (
       <div className="container">
-        <div class="row">
-          <div class="col-md">
+        <div className="row">
+          <div className="col-md">
             <h2>{item.name}</h2>
             <StarRatingComponent
               name="item_rating"
@@ -139,8 +139,8 @@ class Item extends Component {
             </table>
           </div>
 
-          <div class="col-md">
-            {(this.state.item.item_id != -1 && this.state.showReviewForm) &&
+          <div className="col-md">
+            {(this.state.item.item_id !== -1 && this.state.showReviewForm) &&
             <div>
               <ReviewForm
                 email={this.props.email}

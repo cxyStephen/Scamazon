@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { Redirect } from "react-router-dom";
 
 class Checkout extends Component {
   state = {
@@ -22,7 +23,8 @@ class Checkout extends Component {
     addresses: [],
     payments: [],
     shipTypes: [],
-    error: ""
+    error: "",
+    purchasedCart: false
   };
 
   componentDidMount() {
@@ -42,7 +44,7 @@ class Checkout extends Component {
         if (data.success) {
           this.setState({
             items: data.contents,
-            subtotalPrice: data.subtotal/100
+            subtotalPrice: data.subtotal / 100
           });
         } else {
           this.setState({ error: data.message });
@@ -72,7 +74,6 @@ class Checkout extends Component {
     const email = this.props.email;
     if (email.length === 0) return;
     const query = "user=" + email;
-    console.log(url + query);
     fetch(url + query)
       .then(res => res.json())
       .then(response => {
@@ -93,8 +94,11 @@ class Checkout extends Component {
       .catch(error => console.error(error));
   };
   render() {
+    if (this.state.purchasedCart) return <Redirect to="/" />;
     let error =
-      this.state.error.length > 0 ? <Alert>{this.state.error}</Alert> : null;
+      this.state.error.length > 0 ? (
+        <Alert variant="danger">{this.state.error}</Alert>
+      ) : null;
     return (
       <Container>
         {error}
@@ -110,7 +114,7 @@ class Checkout extends Component {
               <tbody>
                 <tr>
                   <td>
-                    <Form>
+                    <Form onSubmit={this.handleSubmit}>
                       <Form.Group controlId="addressID">
                         <Form.Label>Address</Form.Label>
                         <Form.Control as="select" onChange={this.handleChange}>
@@ -153,12 +157,13 @@ class Checkout extends Component {
                         <Form.Label as="legend">
                           Shipping Company and Speed
                         </Form.Label>
-                        <table align="center">
+                        <table align="center" className="table-borderless table-sm">
+                            <tbody>
                           {this.state.shipTypes.map(data => {
                             return (
-                              <tr align="left">
-                                <Col key={data.company + data.speed}>
-                                  <Form.Check 
+                              <tr align="left" key={data.company + data.speed}>
+                                <td >
+                                  <Form.Check
                                     type="radio"
                                     name="formHorizontalRadios"
                                     label={
@@ -180,28 +185,37 @@ class Checkout extends Component {
                                       )
                                     }
                                   />
-                                </Col>
+                                </td>
                               </tr>
                             );
                           })}
+                            </tbody>
                         </table>
                       </Form.Group>
                       <hr />
                       <h4>Order Summary</h4>
                       <table align="center">
-                        <tr align="left">
-                          <div>Subtotal: ${this.state.subtotalPrice}</div>
-                        </tr>
-                        <tr align="left">
-                          <div>Shipping: ${this.state.shippingPrice}</div>
-                        </tr>
-                        <tr align="left">
-                          <div style={{ color: "#b12704", fontWeight: "bold" }}>
-                            Order total: ${this.state.totalPrice}
-                          </div>
-                        </tr>
+                        <tbody>
+                          <tr align="left">
+                            <td>Subtotal: ${this.state.subtotalPrice}</td>
+                          </tr>
+                          <tr align="left">
+                            <td>Shipping: ${this.state.shippingPrice}</td>
+                          </tr>
+                          <tr align="left">
+                            <td
+                              style={{ color: "#b12704", fontWeight: "bold" }}
+                            >
+                              Order total: ${this.state.totalPrice}
+                            </td>
+                          </tr>
+                        </tbody>
                       </table>
-                      <Button variant="success" className="m-md-3">
+                      <Button
+                        variant="success"
+                        className="m-md-3"
+                        type="submit"
+                      >
                         Place order
                       </Button>
                     </Form>
@@ -243,6 +257,60 @@ class Checkout extends Component {
       shippingPrice: shipPrice,
       totalPrice: total
     });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    if (!this.isValidForm()) {
+      this.setState({ error: "Did you fill out the order information form?" });
+      return;
+    }
+    const data = JSON.stringify({
+      email: this.props.email,
+      payment_id: this.state.paymentID,
+      address_id: this.state.addressID,
+      ship_company: this.state.shipCompany,
+      ship_speed: this.state.shipSpeed
+    });
+    const url = API + "/purchase_cart";
+    fetch(url, {
+      method: "POST",
+      body: data,
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(response => {
+        console.log(
+          response.success +
+            "\n" +
+            response.num_shipments +
+            "\n" +
+            response.subtotal_cost +
+            "\n" +
+            response.ship_cost
+        );
+        if (response.success) this.setState({ purchasedCart: true });
+        else if (!response.success) this.setState({ error: response.message });
+      })
+      .catch(error => console.error(error));
+  };
+
+  isValidForm = () => {
+    let isValid = true;
+    Object.keys(this.state)
+      .filter(key => key !== "error" && key !== "purchasedCart")
+      .forEach(i => {
+        if (i === "items" && i.length === 0) {
+          this.setState({ error: "You can't checkout an empty cart" });
+          isValid = false;
+        } else if (this.state[i].length === 0) {
+          isValid = false;
+          console.log(i);
+        }
+      });
+    return isValid;
   };
 }
 

@@ -42,10 +42,9 @@ class Listings extends Component {
     const target = e.target;
     if (target.name === "item_filter")
       this.listingFilter(target.value, this.state.seller_filter);
-    else
-      this.listingFilter(this.state.item_filter, target.value);
+    else this.listingFilter(this.state.item_filter, target.value);
     this.setState({ [target.name]: target.value });
-  }
+  };
 
   listingSort = (listings, sort_by) => {
     // eslint-disable-next-line default-case
@@ -72,18 +71,19 @@ class Listings extends Component {
       case "lowestPrice":
         listings.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     }
-  }
+  };
 
   listingFilter = (item_filter, seller_filter) => {
     item_filter = item_filter.toLowerCase();
     seller_filter = seller_filter.toLowerCase();
     let newListings = this.allListings.filter(
       listing =>
-        listing.item_name.toLowerCase().includes(item_filter)
-          && listing.seller_name.toLowerCase().includes(seller_filter));
+        listing.item_name.toLowerCase().includes(item_filter) &&
+        listing.seller_name.toLowerCase().includes(seller_filter)
+    );
     this.listingSort(newListings, this.state.sort_by);
     this.setState({ listings: newListings });
-  }
+  };
 
   render() {
     let { listings } = this.state;
@@ -102,10 +102,18 @@ class Listings extends Component {
           </Row>
           <Row>
             <Col xs={5}>
-              <Form.Control placeholder="Item name" onChange={this.handleFilterChange} name="item_filter"/>
+              <Form.Control
+                placeholder="Item name"
+                onChange={this.handleFilterChange}
+                name="item_filter"
+              />
             </Col>
             <Col xs={5}>
-              <Form.Control placeholder="Seller name" onChange={this.handleFilterChange} name="seller_filter"/>
+              <Form.Control
+                placeholder="Seller name"
+                onChange={this.handleFilterChange}
+                name="seller_filter"
+              />
             </Col>
             <Col xs={2}>
               <div className="form-group" align="right">
@@ -113,12 +121,14 @@ class Listings extends Component {
                   name="sort_by"
                   value={this.state.sort_by}
                   onChange={this.handleInputChange}
-                  class="custom-select"
+                  className="custom-select"
                 >
                   <option value="item_rating">Item Rating</option>
                   <option value="seller_rating">Seller Rating</option>
-                  <option value="item">Item</option>
-                  <option value="seller">Seller</option>
+                  <option value="item">Item Name</option>
+                  <option value="seller">Seller Name</option>
+                  <option value="highestPrice">Highest Price</option>
+                  <option value="lowestPrice">Lowest Price</option>
                 </select>
               </div>
             </Col>
@@ -136,30 +146,40 @@ class Listings extends Component {
             </tr>
           </thead>
           <tbody>
-            {listings.map(listing => (
-              <tr key={listing.item_id + listing.seller_id}>
-                <td><Link to={"item/"+listing.item_id}>{listing.item_name}</Link></td>
-                <td>${(listing.price / 100).toFixed(2)}</td>
-                <td>{listing.quantity}</td>
-                <td><Link to={"store/"+listing.seller_id}>{listing.seller_name}</Link></td>
-                <td>
-                  <StarRatingComponent
-                    name="item_rating"
-                    editing={false}
-                    starCount={5}
-                    value={listing.item_rating}
-                  />
-                </td>
-                <td>
-                  <StarRatingComponent
-                    name="seller_rating"
-                    editing={false}
-                    starCount={5}
-                    value={listing.seller_rating}
-                  />
-                </td>
-              </tr>
-            ))}
+            {listings
+              .filter(listing => listing.quantity > 0)
+              .map(listing => (
+                <tr key={listing.item_id + listing.seller_id}>
+                  <td>
+                    <Link to={"item/" + listing.item_id}>
+                      {listing.item_name}
+                    </Link>
+                  </td>
+                  <td>${(listing.price / 100).toFixed(2)}</td>
+                  <td>{listing.quantity}</td>
+                  <td>
+                    <Link to={"store/" + listing.seller_id}>
+                      {listing.seller_name}
+                    </Link>
+                  </td>
+                  <td>
+                    <StarRatingComponent
+                      name="item_rating"
+                      editing={false}
+                      starCount={5}
+                      value={listing.item_rating}
+                    />
+                  </td>
+                  <td>
+                    <StarRatingComponent
+                      name="seller_rating"
+                      editing={false}
+                      starCount={5}
+                      value={listing.seller_rating}
+                    />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
