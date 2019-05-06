@@ -48,6 +48,7 @@ class Listings extends Component {
   };
 
   listingSort = (listings, sort_by) => {
+    // eslint-disable-next-line default-case
     switch (sort_by) {
       case "item_rating":
         listings.sort(

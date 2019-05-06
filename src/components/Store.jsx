@@ -116,7 +116,7 @@ class Store extends Component {
           </div>
 
           <div className="col-md">
-            {(this.state.store_name.length != 0 && this.state.showReviewForm) &&
+            {(this.state.store_name.length !== 0 && this.state.showReviewForm) &&
             <div>
               <ReviewForm
                 email={this.props.email}

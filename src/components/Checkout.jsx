@@ -8,7 +8,7 @@ import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 class Checkout extends Component {
   state = {
@@ -74,7 +74,6 @@ class Checkout extends Component {
     const email = this.props.email;
     if (email.length === 0) return;
     const query = "user=" + email;
-    console.log(url + query);
     fetch(url + query)
       .then(res => res.json())
       .then(response => {
@@ -95,7 +94,7 @@ class Checkout extends Component {
       .catch(error => console.error(error));
   };
   render() {
-    if (this.state.purchasedCart) return <Redirect to="/"/>
+    if (this.state.purchasedCart) return <Redirect to="/" />;
     let error =
       this.state.error.length > 0 ? (
         <Alert variant="danger">{this.state.error}</Alert>
@@ -158,11 +157,12 @@ class Checkout extends Component {
                         <Form.Label as="legend">
                           Shipping Company and Speed
                         </Form.Label>
-                        <table align="center">
+                        <table align="center" className="table-borderless table-sm">
+                            <tbody>
                           {this.state.shipTypes.map(data => {
                             return (
-                              <tr align="left">
-                                <Col key={data.company + data.speed}>
+                              <tr align="left" key={data.company + data.speed}>
+                                <td >
                                   <Form.Check
                                     type="radio"
                                     name="formHorizontalRadios"
@@ -185,32 +185,37 @@ class Checkout extends Component {
                                       )
                                     }
                                   />
-                                </Col>
+                                </td>
                               </tr>
                             );
                           })}
+                            </tbody>
                         </table>
                       </Form.Group>
                       <hr />
                       <h4>Order Summary</h4>
                       <table align="center">
-                        <tr align="left">
-                          <div>Subtotal: ${this.state.subtotalPrice}</div>
-                        </tr>
-                        <tr align="left">
-                          <div>Shipping: ${this.state.shippingPrice}</div>
-                        </tr>
-                        <tr align="left">
-                          <div style={{ color: "#b12704", fontWeight: "bold" }}>
-                            Order total: ${this.state.totalPrice}
-                          </div>
-                        </tr>
+                        <tbody>
+                          <tr align="left">
+                            <td>Subtotal: ${this.state.subtotalPrice}</td>
+                          </tr>
+                          <tr align="left">
+                            <td>Shipping: ${this.state.shippingPrice}</td>
+                          </tr>
+                          <tr align="left">
+                            <td
+                              style={{ color: "#b12704", fontWeight: "bold" }}
+                            >
+                              Order total: ${this.state.totalPrice}
+                            </td>
+                          </tr>
+                        </tbody>
                       </table>
-                        <Button
-                            variant="success"
-                            className="m-md-3"
-                            type="submit"
-                        >
+                      <Button
+                        variant="success"
+                        className="m-md-3"
+                        type="submit"
+                      >
                         Place order
                       </Button>
                     </Form>
@@ -267,7 +272,6 @@ class Checkout extends Component {
       ship_company: this.state.shipCompany,
       ship_speed: this.state.shipSpeed
     });
-    console.log(data);
     const url = API + "/purchase_cart";
     fetch(url, {
       method: "POST",
