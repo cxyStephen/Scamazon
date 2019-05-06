@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import API from "../constants";
-import {Link} from "react-router-dom";
-import {FormControl} from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 class CartPage extends Component {
 
@@ -11,8 +9,6 @@ class CartPage extends Component {
         this.state = {
           contents: [],
           subtotal: "",
-          quantity: "",
-          error: ""
         };
       }
 
@@ -30,31 +26,47 @@ class CartPage extends Component {
                     subtotal: data.subtotal 
                 });
             }
-            else {
-                this.setState({ error: data.message });
-            }
         })
         .catch(error => console.error(error));
     }
 
-    handleInputChange = (e, content, targetIndex) => {
-        if (e.target.name === "delete") {
-            const data = JSON.stringify({
+    updateCart = (e, content, targetIndex) => {
+        const target = e.target;
+        let data;
+        if (target.name === "deleteItem") {
+            data = JSON.stringify({
                 email: this.props.email,
                 item: content.item_id,
                 seller: content.seller,
                 quantity: 0
             });
-
-            fetch(API + "/modify_cart", {
-                method: "put",
-                headers: { "Content-Type": "application/json" },
-                body: data
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log(data.success + "\n" + data.message);
-                if (data.success) {
+        } else if (target.name === "updateQuantity") {
+            e.preventDefault();
+            data = JSON.stringify({
+                email: this.props.email,
+                item: content.item_id,
+                seller: content.seller,
+                quantity: parseInt(target.elements["quantity"].value, 10)
+            });
+        }
+        fetch(API + "/modify_cart", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: data
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.success + "\n" + data.message);
+            if (data.success) {
+                if (target.name === "deleteItem") {
+                    this.setState(prevState => {
+                        const updatedContents = prevState.contents.filter((content, index) => index !== targetIndex)
+                        return {
+                            contents: updatedContents
+                        }
+                    });
+                } else if (target.name === "updateQuantity") {
+                    alert("Item quantity was updated");
                     const path = "/get_cart";
                     const query = "?user=" + this.props.email;
                     if (query.length === 6) 
@@ -63,54 +75,64 @@ class CartPage extends Component {
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            this.setState({
+                            this.setState({ 
                                 contents: data.contents, 
                                 subtotal: data.subtotal 
                             });
                         }
-                        else {
-                            this.setState({ error: data.message });
-                        }
                     })
                     .catch(error => console.error(error));
-                } else {
-                    this.setState({ error: data.message });
+
+                    /*
+                    this.setState(prevState => {
+                        const updatedContents = prevState.contents.map((content, index) => {
+                            if (index === targetIndex) {
+                                const updatedContent = {
+                                    item_id: content.item_id,
+                                    item_name: content.item_name,
+                                    price: content.price,
+                                    quantity: parseInt(target.elements["quantity"].value, 10),
+                                    seller: content.seller
+                                }
+                                return updatedContent;
+                            }
+                            return content;
+                        });
+                        return {
+                            contents: updatedContents
+                        };
+                    });
+                    */
                 }
-              })
-              .catch(error => console.error(error));
-        } 
-        /*
-        <td>
-            <input 
-                name="updateQuantity"
-                type="number"
-                min="0"
-                step="1"
-                value={this.state.contents[index].quantity}
-                onChange={e => this.handleInputChange(e, content, index)}
-                placeholder={content.quantity}
-            />
-        </td>
-        
-        else if (e.target.name === "updateQuantity") { 
-            console.log(e.target.value);
-            this.setState(prevState => {
-                const updatedContents = prevState.contents.map((content, index) => {
-                    if (index === targetIndex) {
-                        content.quantity = e.target.value;
-                    }
-                    return content;
-                })
-                return {
-                    contents: updatedContents
-                }
-            });
-        }
-        */
+            }
+        })
+        .catch(error => console.error(error));
     }
 
+    handleInputChange = (e, targetIndex) => {
+        const target = e.target;
+        this.setState(prevState => {
+            const updatedContents = prevState.contents.map((content, index) => {
+                if (index === targetIndex) {
+                    const updatedContent = {
+                        item_id: content.item_id,
+                        item_name: content.item_name,
+                        price: content.price,
+                        quantity: target.value,
+                        seller: content.seller
+                    }
+                    return updatedContent;
+                }
+                return content;
+            });
+            return {
+                contents: updatedContents
+            };
+        });
+    }
     render() {
         const {contents, subtotal} = this.state;
+
         return (
             <div className="container">
                 <h3 align="left">Shopping Cart</h3>
@@ -125,22 +147,41 @@ class CartPage extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {contents.map((content,index) => (
+                    {contents.map((content, index) => (
                         <tr key={index}>
                             <td><Link to={"item/"+content.item_id}>{content.item_name}</Link></td>
                             <td>{content.seller}</td>
                             <td>${(content.price / 100).toFixed(2)}</td>
-                            <td><FormControl size="sm" defaultValue={content.quantity} type="number" ref="quantity"/></td>
                             <td>
-                                <Button 
-                                    name="delete" 
+                                <form name="updateQuantity" onSubmit={e => this.updateCart(e, content, index)}>
+                                    <input 
+                                        name="quantity"
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        value={this.state.contents[index].quantity}
+                                        onChange={e => this.handleInputChange(e, index)}
+                                    />
+                                    <button
+                                        name="updateQuantity"
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        size="sm"
+                                    >
+                                        Update
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <button 
+                                    name="deleteItem" 
                                     type="button" 
                                     className="btn btn-danger" 
                                     size="sm"
-                                    onClick={e => this.handleInputChange(e, content)}
+                                    onClick={e => this.deleteItem(e, content, index)}
                                 >
                                     X
-                                </Button>
+                                </button>
                             </td>
                         </tr>
                     ))}

@@ -39,7 +39,6 @@ class ListingForm extends Component {
       console.log(data.success + "\n" + data.message);
       if (data.success) {
         alert("A new listing was created.");
-        window.location.reload();
       } else {
         alert("Error: Could not create new listing.");
       }
