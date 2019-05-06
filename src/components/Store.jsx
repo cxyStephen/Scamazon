@@ -3,51 +3,45 @@ import "bootstrap/dist/css/bootstrap.css";
 import StarRatingComponent from "react-star-rating-component";
 import API from "../constants";
 import { Link } from "react-router-dom";
-import Image from "react-bootstrap/Image";
 import AddToCart from "./AddToCart";
 import ReviewForm from "./ReviewForm";
 
-class Item extends Component {
+class Store extends Component {
   constructor(...args) {
     super(...args);
     this.loadReviews = this.loadReviews.bind(this);
     this.state = {
       reviews: [],
       listings: [],
-      images: [],
       rating: 0,
-      item: {
-        category: "",
-        desc: "",
-        item_id: -1,
-        manufacturer: "",
-        name: ""
-      },
+      store_name: "",
       showReviewForm: false
     };
   }
 
   componentDidMount() {
-    let url = API + "/get_item?";
-    let query = "item_id=" + this.props.match.params.item_id;
+    let url = API + "/get_user_names?";
+    let query = "email=" + this.props.match.params.user_id;
     fetch(url + query)
       .then(response => response.json())
-      .then(data => this.setState({ item: data.item, images: data.images }))
+      .then(data => this.setState({ store_name: data.store_name }))
       .then(() => {
         this.loadReviews();
         url = API + "/get_listings?";
-        query = "type=item&id=" + this.props.match.params.item_id;
+        query = "type=seller&id=" + this.props.match.params.user_id;
         fetch(url + query)
           .then(response => response.json())
           .then(data => this.setState({ listings: data.listings }))
           .catch(error => console.error(error));
       })
       .catch(error => console.error(error));
+
+    this.setState({ showModal: true });
   }
 
   loadReviews() {
     const url = API + "/get_reviews?";
-    const query = "type=item&id=" + this.props.match.params.item_id;
+    const query = "type=seller&id=" + this.props.match.params.user_id;
     fetch(url + query)
       .then(response => response.json())
       .then(data =>
@@ -68,60 +62,42 @@ class Item extends Component {
   }
 
   render() {
-    const item = this.state.item;
     const reviews = this.state.reviews;
     const rating = this.state.rating;
     const listings = this.state.listings;
-    const images = this.state.images;
 
     return (
       <div className="container">
-        <div class="row">
-          <div class="col-md">
-            <h2>{item.name}</h2>
+        <div className="row">
+          <div className="col-md">
+            <h2>{this.state.store_name}</h2>
+            <h5>({this.props.match.params.user_id})</h5>
             <StarRatingComponent
-              name="item_rating"
+              name="seller_rating"
               editing={false}
               starCount={5}
               value={rating}
             />
-            {images.length > 0 && (
-              <div
-                className="container-fluid justify-content-center"
-                style={{ width: 400 }}
-              >
-                <Image
-                  src={images[0]}
-                  className="h-auto d-inline-block rounded"
-                  fluid
-                />
-              </div>
-            )}
-            <p>{item.desc}</p>
-            <b>Manufacturer:</b> {item.manufacturer}
-            <br />
-            <b>Category:</b> {item.category}
-            <p />
-            <h4>Sold by:</h4>
+            <h4>Currently selling:</h4>
             <table className="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>Seller</th>
+                  <th>Item</th>
                   <th>Price</th>
                   <th>Stock</th>
                 </tr>
               </thead>
               <tbody>
                 {listings.map(listing => (
-                  <tr key={listing.seller_id}>
+                  <tr key={listing.item_id}>
                     <td>
-                      <Link to={"/store/"+listing.seller_id}>{listing.seller_name}</Link>
+                      <Link to={"/item/"+listing.item_id}>{listing.item_name}</Link>
                       <br />
                       <StarRatingComponent
-                        name="seller_rating"
+                        name="item_rating"
                         editing={false}
                         starCount={5}
-                        value={listing.seller_rating}
+                        value={listing.item_rating}
                       />
                     </td>
                     <td>${(listing.price / 100).toFixed(2)}</td>
@@ -139,13 +115,13 @@ class Item extends Component {
             </table>
           </div>
 
-          <div class="col-md">
-            {(this.state.item.item_id != -1 && this.state.showReviewForm) &&
+          <div className="col-md">
+            {(this.state.store_name.length != 0 && this.state.showReviewForm) &&
             <div>
               <ReviewForm
                 email={this.props.email}
-                type="item"
-                id={this.state.item.item_id}
+                type="seller"
+                id={this.props.match.params.user_id}
                 onSubmit={this.loadReviews}
               />
               <hr />
@@ -159,7 +135,7 @@ class Item extends Component {
                   </h5>
                   <h6>{review.title}</h6>
                   <StarRatingComponent
-                    name="item_rating"
+                    name="seller_rating"
                     editing={false}
                     starCount={5}
                     value={review.rating}
@@ -176,4 +152,4 @@ class Item extends Component {
   }
 }
 
-export default Item;
+export default Store;

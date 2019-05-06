@@ -141,7 +141,7 @@ class Listings extends Component {
                 <td><Link to={"item/"+listing.item_id}>{listing.item_name}</Link></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
                 <td>{listing.quantity}</td>
-                <td>{listing.seller_name}</td>
+                <td><Link to={"store/"+listing.seller_id}>{listing.seller_name}</Link></td>
                 <td>
                   <StarRatingComponent
                     name="item_rating"
