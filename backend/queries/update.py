@@ -13,6 +13,11 @@ def cart_remove(CartID, Item, Seller):
     DELETE FROM shoppingcartcontents WHERE CartID={} AND Item={} AND Seller={}
     '''.format(CartID, Item, Seller)
 
+def remove_listing_from_all_carts(Item, Seller):
+    return '''
+    DELETE FROM shoppingcartcontents WHERE Item={} AND Seller={}
+    '''.format(Item, Seller)
+
 def listing_remove(Item, Seller):
     return '''
     DELETE FROM listing WHERE Seller={} AND Item={}

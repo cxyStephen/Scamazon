@@ -580,6 +580,7 @@ def modify_listing():
     
     try:
         if (quant == 0):
+            query.execute(update.remove_listing_from_all_carts(item, seller))
             query.execute(update.listing_remove(item, seller))
         else:
             query.execute(update.listing(item, seller, quant, price))
@@ -688,8 +689,6 @@ def purchase_cart():
             new_quantity = current_quantity - item['quantity']
             if (new_quantity < 0):
                 return error_response(item['item_name'] + ' does not have enough in stock')
-            if (new_quantity == 0):
-                query.execute(update.listing_remove(item['item_id'], seller))
             else:
                 query.execute(update.listing(item['item_id'], seller, new_quantity, item['price']))
 
