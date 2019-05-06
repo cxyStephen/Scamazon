@@ -76,27 +76,6 @@ class CartPage extends Component {
                     }
                 })
                 .catch(error => console.error(error));
-
-                    /*
-                    this.setState(prevState => {
-                        const updatedContents = prevState.contents.map((content, index) => {
-                            if (index === targetIndex) {
-                                const updatedContent = {
-                                    item_id: content.item_id,
-                                    item_name: content.item_name,
-                                    price: content.price,
-                                    quantity: parseInt(target.elements["quantity"].value, 10),
-                                    seller: content.seller
-                                }
-                                return updatedContent;
-                            }
-                            return content;
-                        });
-                        return {
-                            contents: updatedContents
-                        };
-                    });
-                    */
             }
         })
         .catch(error => console.error(error));
@@ -133,7 +112,7 @@ class CartPage extends Component {
 
         return (
             <div className="container">
-                <h3 align="left">Shopping Cart</h3>
+                <h1 align="center">Shopping Cart</h1>
                 <table className="table table-hover table-sm table-borderless">
                 <thead className="thead-dark">
                     <tr>
