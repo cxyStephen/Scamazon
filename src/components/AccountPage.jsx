@@ -8,7 +8,7 @@ class AccountPage extends Component {
     if (this.props.email.length === 0) return <Redirect to="/user" />;
     return (
       <Container>
-        <div>You are currently logged in as '{this.props.email}'</div>
+        <div>You are currently logged in as "{this.props.email}"</div>
         <Row className="justify-content-md-center">
           <NavLink to="account/type">Account type</NavLink>
         </Row>

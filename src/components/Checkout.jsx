@@ -157,39 +157,45 @@ class Checkout extends Component {
                         <Form.Label as="legend">
                           Shipping Company and Speed
                         </Form.Label>
-                        <table align="center" className="table-borderless table-sm">
-                            <tbody>
-                          {this.state.shipTypes.map(data => {
-                            return (
-                              <tr align="left" key={data.company + data.speed}>
-                                <td >
-                                  <Form.Check
-                                    type="radio"
-                                    name="formHorizontalRadios"
-                                    label={
-                                      " $ " +
-                                      data.price / 100 +
-                                      " " +
-                                      data.company +
-                                      " " +
-                                      data.speed
-                                    }
-                                    id={data.company + data.speed}
-                                    speed={data.speed}
-                                    onChange={e =>
-                                      this.handleShipmentChange(
-                                        e,
-                                        data.company,
-                                        data.speed,
-                                        data.price
-                                      )
-                                    }
-                                  />
-                                </td>
-                              </tr>
-                            );
-                          })}
-                            </tbody>
+                        <table
+                          align="center"
+                          className="table-borderless table-sm"
+                        >
+                          <tbody>
+                            {this.state.shipTypes.map(data => {
+                              return (
+                                <tr
+                                  align="left"
+                                  key={data.company + data.speed}
+                                >
+                                  <td>
+                                    <Form.Check
+                                      type="radio"
+                                      name="formHorizontalRadios"
+                                      label={
+                                        " $ " +
+                                        data.price / 100 +
+                                        " " +
+                                        data.company +
+                                        " " +
+                                        data.speed
+                                      }
+                                      id={data.company + data.speed}
+                                      speed={data.speed}
+                                      onChange={e =>
+                                        this.handleShipmentChange(
+                                          e,
+                                          data.company,
+                                          data.speed,
+                                          data.price
+                                        )
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
                         </table>
                       </Form.Group>
                       <hr />

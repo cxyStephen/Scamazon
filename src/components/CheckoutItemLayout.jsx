@@ -6,10 +6,14 @@ class CheckoutItemLayout extends Component {
     return (
       <tr>
         <td>
-          <Row style={{ fontSize: "20px" ,fontWeight: "bold" }}>{this.props.item.item_name}</Row>
+          <Row style={{ fontSize: "20px", fontWeight: "bold" }}>
+            {this.props.item.item_name}
+          </Row>
           <Row>Quantity: {this.props.item.quantity}</Row>
-          <Row style={{ color: "#b12704", fontWeight: "bold" }}>${this.props.item.price/100*this.props.item.quantity}</Row>
-          <Row style={{color: "#888"}}>Sold by: {this.props.item.seller}</Row>
+          <Row style={{ color: "#b12704", fontWeight: "bold" }}>
+            ${(this.props.item.price / 100) * this.props.item.quantity}
+          </Row>
+          <Row style={{ color: "#888" }}>Sold by: {this.props.item.seller}</Row>
         </td>
       </tr>
     );

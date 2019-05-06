@@ -14,7 +14,7 @@ class NavBar extends Component {
     let sellLink = null;
     let cartButton = null;
     let myListingsLink = null;
-    let myPurchasesLink = null;
+    let myOrdersLink = null;
 
     if (this.props.isLoggedIn)
       logoutButton = (
@@ -24,9 +24,9 @@ class NavBar extends Component {
       );
 
     if (this.props.isCustomer) {
-      myPurchasesLink = (
-        <LinkContainer to="/myPurchases">
-          <NavLink>My Purchases</NavLink>
+      myOrdersLink = (
+        <LinkContainer to="/myOrders">
+          <NavLink>My Orders</NavLink>
         </LinkContainer>
       );
       cartButton = (
@@ -69,7 +69,7 @@ class NavBar extends Component {
             </LinkContainer>
             {sellLink}
             {myListingsLink}
-            {myPurchasesLink}
+            {myOrdersLink}
             {logoutButton}
           </Nav>
         </Navbar.Collapse>
