@@ -14,6 +14,8 @@ import Item from "./Item";
 import Store from "./Store";
 import ListingForm from "./ListingForm";
 import Checkout from "./Checkout";
+import MyPurchases from "./MyPurchases";
+import MyListings from "./MyListings";
 
 class Main extends Component {
   render() {
@@ -41,6 +43,13 @@ class Main extends Component {
           />
           <Route
             exact
+            path="/mylistings"
+            render={props => (
+              <MyListings {...props} email={this.props.email} />
+            )}
+          />
+          <Route
+            exact
             path="/cart"
             render={props => <CartPage {...props} email={this.props.email} />}
           />
@@ -48,6 +57,13 @@ class Main extends Component {
               exact
               path="/cart/checkout"
               render={props => <Checkout {...props} email={this.props.email} />}
+          />
+          <Route
+            exact
+            path="/mypurchases"
+            render={props => (
+              <MyPurchases {...props} email={this.props.email} />
+            )}
           />
           <Route
             exact

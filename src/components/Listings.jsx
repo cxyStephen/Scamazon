@@ -34,7 +34,6 @@ class Listings extends Component {
   handleInputChange = e => {
     const { listings } = this.state;
     const sort_by = e.target.value;
-    // eslint-disable-next-line default-case
     this.listingSort(listings, sort_by);
     this.setState({ sort_by: sort_by, listings: listings });
   };
@@ -49,6 +48,7 @@ class Listings extends Component {
   }
 
   listingSort = (listings, sort_by) => {
+    // eslint-disable-next-line default-case
     switch (sort_by) {
       case "item_rating":
         listings.sort(

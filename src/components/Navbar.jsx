@@ -13,6 +13,8 @@ class NavBar extends Component {
     let logoutButton = null;
     let sellLink = null;
     let cartButton = null;
+    let myListingsLink = null;
+    let myPurchasesLink = null;
 
     if (this.props.isLoggedIn)
       logoutButton = (
@@ -22,6 +24,11 @@ class NavBar extends Component {
       );
 
     if (this.props.isCustomer) {
+      myPurchasesLink = (
+        <LinkContainer to="/myPurchases">
+          <NavLink>My Purchases</NavLink>
+        </LinkContainer>
+      );
       cartButton = (
         <LinkContainer to="/cart">
           <Button>Cart</Button>
@@ -35,6 +42,11 @@ class NavBar extends Component {
           <NavLink>Sell</NavLink>
         </LinkContainer>
       );
+      myListingsLink = (
+        <LinkContainer to="/mylistings">
+          <NavLink>My Listings</NavLink>
+        </LinkContainer>
+      );
     }
 
     return (
@@ -46,8 +58,6 @@ class NavBar extends Component {
           top: "50%"
         }}
       >
-        <Navbar  />
-
         <LinkContainer to="/">
           <Navbar.Brand>Scamazon</Navbar.Brand>
         </LinkContainer>
@@ -58,6 +68,8 @@ class NavBar extends Component {
               <NavLink>Account</NavLink>
             </LinkContainer>
             {sellLink}
+            {myListingsLink}
+            {myPurchasesLink}
             {logoutButton}
           </Nav>
         </Navbar.Collapse>

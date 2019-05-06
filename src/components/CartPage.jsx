@@ -30,7 +30,7 @@ class CartPage extends Component {
         .catch(error => console.error(error));
     }
 
-    updateCart = (e, content, targetIndex) => {
+    updateCart = (e, content) => {
         const target = e.target;
         let data;
         if (target.name === "deleteItem") {
@@ -112,8 +112,8 @@ class CartPage extends Component {
 
         return (
             <div className="container">
-                <h1 align="center">Shopping Cart</h1>
-                <table className="table table-hover table-sm table-borderless">
+                <h1>Shopping Cart</h1>
+                <table className="table table-hover table-sm table-borderless table-striped">
                 <thead className="thead-dark">
                     <tr>
                         <th>Item Name</th>
@@ -130,7 +130,7 @@ class CartPage extends Component {
                             <td>{content.seller}</td>
                             <td>${(content.price / 100).toFixed(2)}</td>
                             <td>
-                                <form name="updateQuantity" onSubmit={e => this.updateCart(e, content, index)}>
+                                <form name="updateQuantity" onSubmit={e => this.updateCart(e, content)}>
                                     <input 
                                         name="quantity"
                                         type="number"
@@ -140,7 +140,6 @@ class CartPage extends Component {
                                         onChange={e => this.handleInputChange(e, index)}
                                     />
                                     <button
-                                        name="updateQuantity"
                                         type="submit"
                                         className="btn btn-primary"
                                         size="sm"
@@ -157,7 +156,7 @@ class CartPage extends Component {
                                     size="sm"
                                     onClick={e => this.updateCart(e, content, index)}
                                 >
-                                    X
+                                    Delete
                                 </button>
                             </td>
                         </tr>

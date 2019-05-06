@@ -58,7 +58,7 @@ class Items extends Component {
             </select>
           </label>
         </div>
-        <table className="table table-bordered table-hover table-sm table-borderless">
+        <table className="table table-hover table-sm table-borderless table-striped">
           <thead className="thead-dark">
             <tr>
               <th>ID</th>
