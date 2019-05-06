@@ -407,7 +407,8 @@ def get_listings():
             query.execute(select.listings())
         for val in query:
             out.append({'item_name': val[0], 'item_id': val[1], 'price': val[2],
-                        'seller_name': val[3], 'seller_id': val[4], 'quantity': val[5]})
+                        'seller_name': val[3], 'seller_id': val[4], 'quantity': val[5],
+                        'recency': len(out)})
 
         for item in out:
             query.execute(select.item_review_avg(item['item_id']))
