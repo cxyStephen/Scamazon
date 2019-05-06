@@ -139,3 +139,20 @@ def user_is_seller(Email):
     return '''
     SELECT DisplayName FROM seller WHERE Email={}
     '''.format(Email)
+
+def purchases(Email):
+    return '''
+    SELECT OrderID, PurchaseDate, Customer, TotalPrice,
+	   ItemID, ItemName, Quantity, s.Seller,
+       RecipientName, a.Address, City, State, Country, Zip,
+       PaymentType, PaymentKey,
+       ShipmentID, TrackingNumber, Company, Speed, ShipDate
+	FROM purchase p
+		JOIN shoppingcartcontents s ON p.ShoppingCart=s.CartID
+		JOIN item i ON s.item=i.ItemID
+        JOIN address a ON p.Address=a.AddressID
+        JOIN payment py on py.PaymentID = p.Payment
+        JOIN shipment sh on sh.Purchase = p.OrderID AND s.Seller=sh.Seller
+    WHERE customer = {}
+    ORDER BY orderid
+    '''.format(Email)

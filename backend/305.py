@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 from queries import insert, select, update
+from datetime import date
 
 import mysql.connector
 
@@ -448,6 +449,94 @@ def get_cart():
         price += val[4] * val[3]
 
     return jsonify(success=True, contents=out, subtotal=price), 200
+
+@app.route('/get_purchases', methods=['GET'])
+def get_purchases():
+    query = g.cursor
+    req = request.args
+    user = '"{}"'.format(req.get('user'))
+
+    try:
+        query.execute(select.purchases(user))
+    except Exception as e:
+        return error_response(e)
+
+    prev_orderid = -1
+    prev_shipmentid = -1
+    purchases = []
+    for val in query:
+        OrderID =        val[0]
+        PurchaseDate =   val[1]
+        Customer =       val[2]
+        TotalPrice =     val[3]
+
+        ItemID =         val[4]
+        ItemName =       val[5]
+        Quantity =       val[6]
+        Seller =         val[7]
+
+        RecipientName =  val[8]
+        Address =        val[9]
+        City =           val[10]
+        State =          val[11]
+        Country =        val[12]
+        Zip =            val[13]
+
+        PaymentType =    val[14]
+        PaymentKey =     val[15]
+
+        ShipmentID =     val[16]
+        TrackingNumber = val[17]
+        Company =        val[18]
+        Speed =          val[19]
+        ShipDate =       val[20]
+
+        if (OrderID != prev_orderid):
+            order = {
+                'order_id': OrderID,
+                'purchase_date': PurchaseDate.strftime('%D'),
+                'purchase_date_string': PurchaseDate.strftime('%A, %B %d, %Y'),
+                'customer': Customer,
+                'total_price': TotalPrice,
+                'address': {
+                    'name': RecipientName,
+                    'address': Address,
+                    'city': City,
+                    'state': State,
+                    'country': Country,
+                    'zip': Zip
+                },
+                'payment': {
+                    'type': PaymentType,
+                    'key': PaymentKey
+                },
+                'shipments': []
+            }
+            prev_orderid = OrderID
+            prev_shipmentid = -1
+            purchases.append(order)
+        
+        if (ShipmentID != prev_shipmentid):
+            shipment = {
+                'shipment_id': ShipmentID,
+                'company': Company,
+                'speed': Speed,
+                'ship_date': ShipDate,
+                'tracking_num': TrackingNumber,
+                'items': []
+            }
+            prev_shipmentid = ShipmentID
+            purchases[-1]['shipments'].append(shipment)
+        
+        item = {
+            'item_id': ItemID,
+            'item_name': ItemName,
+            'quantity': Quantity,
+            'seller': Seller
+        }
+        purchases[-1]['shipments'][-1]['items'].append(item)
+
+    return jsonify(success=True, purchases=purchases), 200
 
 @app.route('/get_user_type', methods=['GET'])
 def get_user_type():
