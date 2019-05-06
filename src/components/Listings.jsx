@@ -113,12 +113,14 @@ class Listings extends Component {
                   name="sort_by"
                   value={this.state.sort_by}
                   onChange={this.handleInputChange}
-                  class="custom-select"
+                  className="custom-select"
                 >
                   <option value="item_rating">Item Rating</option>
                   <option value="seller_rating">Seller Rating</option>
-                  <option value="item">Item</option>
-                  <option value="seller">Seller</option>
+                  <option value="item">Item Name</option>
+                  <option value="seller">Seller Name</option>
+                  <option value="highestPrice">Highest Price</option>
+                  <option value="lowestPrice">Lowest Price</option>
                 </select>
               </div>
             </Col>
@@ -136,7 +138,7 @@ class Listings extends Component {
             </tr>
           </thead>
           <tbody>
-            {listings.map(listing => (
+            {listings.filter(listing => listing.quantity > 0).map(listing => (
               <tr key={listing.item_id + listing.seller_id}>
                 <td><Link to={"item/"+listing.item_id}>{listing.item_name}</Link></td>
                 <td>${(listing.price / 100).toFixed(2)}</td>
