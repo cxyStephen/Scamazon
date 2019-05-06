@@ -16,6 +16,7 @@ class AddToCart extends Component {
         super(...args);
 
         this.addToCart = () => {
+            console.log(this.refs.quantity.value);
             const url = API + "/add_to_cart";
             const data = JSON.stringify({
                 email: this.props.email,

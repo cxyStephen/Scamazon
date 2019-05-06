@@ -11,6 +11,7 @@ import SellPage from "./SellPage";
 import PaymentPage from "./PaymentPage";
 import NewPayment from "./NewPayment";
 import Item from "./Item";
+import Store from "./Store";
 import ListingForm from "./ListingForm";
 import Checkout from "./Checkout";
 
@@ -108,7 +109,11 @@ class Main extends Component {
             path="/item/:item_id"
             render={props => <Item {...props} email={this.props.email} />}
           />
-
+          <Route
+            exact
+            path="/store/:user_id"
+            render={props => <Store {...props} email={this.props.email} />}
+          />
         </Switch>
       </main>
     );

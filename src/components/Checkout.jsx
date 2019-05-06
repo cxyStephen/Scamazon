@@ -158,47 +158,59 @@ class Checkout extends Component {
                         <Form.Label as="legend">
                           Shipping Company and Speed
                         </Form.Label>
-                        {this.state.shipTypes.map(data => {
-                          return (
-                            <Col key={data.company + data.speed}>
-                              <Form.Check
-                                type="radio"
-                                name="formHorizontalRadios"
-                                label={
-                                  " $ " +
-                                  data.price / 100 +
-                                  " " +
-                                  data.company +
-                                  " " +
-                                  data.speed
-                                }
-                                id={data.company + data.speed}
-                                speed={data.speed}
-                                onChange={e =>
-                                  this.handleShipmentChange(
-                                    e,
-                                    data.company,
-                                    data.speed,
-                                    data.price
-                                  )
-                                }
-                              />
-                            </Col>
-                          );
-                        })}
+                        <table align="center">
+                          {this.state.shipTypes.map(data => {
+                            return (
+                              <tr align="left">
+                                <Col key={data.company + data.speed}>
+                                  <Form.Check
+                                    type="radio"
+                                    name="formHorizontalRadios"
+                                    label={
+                                      " $ " +
+                                      data.price / 100 +
+                                      " " +
+                                      data.company +
+                                      " " +
+                                      data.speed
+                                    }
+                                    id={data.company + data.speed}
+                                    speed={data.speed}
+                                    onChange={e =>
+                                      this.handleShipmentChange(
+                                        e,
+                                        data.company,
+                                        data.speed,
+                                        data.price
+                                      )
+                                    }
+                                  />
+                                </Col>
+                              </tr>
+                            );
+                          })}
+                        </table>
                       </Form.Group>
                       <hr />
                       <h4>Order Summary</h4>
-                      <div>Subtotal: ${this.state.subtotalPrice}</div>
-                      <div>Shipping: ${this.state.shippingPrice}</div>
-                      <div style={{ color: "#b12704", fontWeight: "bold" }}>
-                        Order total: ${this.state.totalPrice}
-                      </div>
-                      <Button
-                        variant="success"
-                        className="m-md-3"
-                        type="submit"
-                      >
+                      <table align="center">
+                        <tr align="left">
+                          <div>Subtotal: ${this.state.subtotalPrice}</div>
+                        </tr>
+                        <tr align="left">
+                          <div>Shipping: ${this.state.shippingPrice}</div>
+                        </tr>
+                        <tr align="left">
+                          <div style={{ color: "#b12704", fontWeight: "bold" }}>
+                            Order total: ${this.state.totalPrice}
+                          </div>
+                        </tr>
+                      </table>
+                        <Button
+                            variant="success"
+                            className="m-md-3"
+                            type="submit"
+                        >
                         Place order
                       </Button>
                     </Form>
