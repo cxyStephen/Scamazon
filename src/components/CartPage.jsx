@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import API from "../constants";
 import { Link } from "react-router-dom";
+import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col"
 
 class CartPage extends Component {
 
@@ -109,11 +113,15 @@ class CartPage extends Component {
 
     render() {
         const {contents, subtotal} = this.state;
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD'
+        });
 
         return (
             <div className="container">
                 <h1>Shopping Cart</h1>
-                <table className="table table-hover table-sm table-borderless table-striped">
+                <Table hover borderless table-striped size="sm">
                 <thead className="thead-dark">
                     <tr>
                         <th>Item Name</th>
@@ -128,51 +136,59 @@ class CartPage extends Component {
                         <tr key={index}>
                             <td><Link to={"item/"+content.item_id}>{content.item_name}</Link></td>
                             <td>{content.seller}</td>
-                            <td>${(content.price / 100).toFixed(2)}</td>
+                            <td>{formatter.format(content.price / 100)}</td>
                             <td>
-                                <form name="updateQuantity" onSubmit={e => this.updateCart(e, content)}>
-                                    <input 
-                                        name="quantity"
-                                        type="number"
-                                        min="0"
-                                        step="1"
-                                        value={this.state.contents[index].quantity}
-                                        onChange={e => this.handleInputChange(e, index)}
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary"
-                                        size="sm"
-                                    >
-                                        Update
-                                    </button>
-                                </form>
+                                <Form name="updateQuantity" onSubmit={e => this.updateCart(e, content)}>
+                                    <Form.Row>
+                                        <Col>
+                                            <Form.Control
+                                                name="quantity"
+                                                type="number"
+                                                min="0"
+                                                step="1"
+                                                value={this.state.contents[index].quantity}
+                                                onChange={e => this.handleInputChange(e, index)}
+                                                size="sm"
+                                            />
+                                        </Col>
+                                        <Col align="left">
+                                            <Button
+                                                type="submit"
+                                                variant="primary"
+                                                size="sm"
+                                            >
+                                                Update
+                                            </Button>
+                                        </Col>
+                                    </Form.Row>
+                                </Form>
                             </td>
                             <td>
-                                <button 
+                                <Button 
                                     name="deleteItem" 
                                     type="button" 
-                                    className="btn btn-danger" 
+                                    variant="danger" 
                                     size="sm"
                                     onClick={e => this.updateCart(e, content, index)}
                                 >
                                     Delete
-                                </button>
+                                </Button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
-                </table>
+                </Table>
                 <h5 align="right">Subtotal: ${(subtotal / 100).toFixed(2)}</h5>
                 <div align="right">
-                    <button 
+                    <Button 
                         name="checkout" 
                         type="button" 
-                        className="btn btn-success"
+                        variant="success"
                         onClick={this.handleCartCheckout}
+                        size="sm"
                     >
                         Checkout
-                    </button>
+                    </Button>
                 </div>
             </div>
         );

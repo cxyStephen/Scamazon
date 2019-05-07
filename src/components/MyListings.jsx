@@ -1,5 +1,10 @@
 import React, { Component } from "react";
 import API from "../constants";
+import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import CurrencyInput from "react-currency-masked-input";
 
 class MyListings extends Component {
     constructor() {
@@ -11,16 +16,19 @@ class MyListings extends Component {
 
     componentDidMount() {
         const path = "/get_listings";
-        const query = "?user=" + this.props.email;
-        if (query.length === 6)
+        const query = "?type=seller&id=" + this.props.email;
+        if (query.length === "?type=seller&id=".length)
             return;
         fetch(API + path + query)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-            this.setState({
-                listings: data.listings.filter(listing => listing.seller_id === this.props.email)
-            });
+                this.setState({
+                    listings: data.listings.map(listing => {
+                        listing.price = (listing.price / 100).toFixed(2);
+                        return listing;
+                    })
+                });
             } else {
                 this.setState({ error: data.message });
             }
@@ -43,8 +51,8 @@ class MyListings extends Component {
             data = JSON.stringify({
                 item: listing.item_id,
                 seller: this.props.email,
-                quantity: listing.price,
-                price: parseInt(target.elements["price"].value, 10)
+                quantity: listing.quantity,
+                price: parseInt(target.elements["price"].value * 100, 10)
             });
         } else if (target.name === "updateQuantity") {
             e.preventDefault();
@@ -52,7 +60,7 @@ class MyListings extends Component {
                 item: listing.item_id,
                 seller: this.props.email,
                 quantity: parseInt(target.elements["quantity"].value, 10),
-                price: listing.price
+                price: listing.price * 100
             });
         }
         fetch(API + "/modify_listing", {
@@ -70,16 +78,21 @@ class MyListings extends Component {
                     alert("Listing quantity was updated");
                 }
                 const path = "/get_listings";
-                const query = "?user=" + this.props.email;
-                if (query.length === 6) 
+                const query = "?type=seller&id=" + this.props.email;
+                if (query.length === "?type=seller&id=".length)
                     return;
                 fetch(API + path + query)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        this.setState({ 
-                            listings: data.listings
+                        this.setState({
+                            listings: data.listings.map(listing => {
+                                listing.price = (listing.price / 100).toFixed(2);
+                                return listing;
+                            })
                         });
+                    } else {
+                        this.setState({ error: data.message });
                     }
                 })
                 .catch(error => console.error(error));
@@ -88,27 +101,26 @@ class MyListings extends Component {
         .catch(error => console.error(error));
     }
 
-    handleInputChange = (e, targetIndex) => {
+    handleInputChange = (e, targetIndex, maskedValue) => {
         const target = e.target;
         let updatedListing;
         this.setState(prevState => {
             const updatedListings = prevState.listings.map((listing, index) => {
                 if (index === targetIndex) {
-                    const priceDisplayed = target.value * 100;
                     if (target.name === "price") {
                         updatedListing = {
                             item_id: listing.item_id,
                             item_name: listing.item_name,
-                            price: target.value,
+                            price: maskedValue,
                             quantity: listing.quantity,
-                        }
+                        };
                     } else if (target.name === "quantity") {
                         updatedListing = {
                             item_id: listing.item_id,
                             item_name: listing.item_name,
                             price: listing.price,
                             quantity: target.value,
-                        }
+                        };
                     }
                     return updatedListing;
                 }
@@ -122,16 +134,17 @@ class MyListings extends Component {
 
     render() {
         const { listings } = this.state;
+
         return (
             <div className="container">
                 <h1>Your Listings</h1>
-                <table className="table table-hover table-sm table-borderless table-striped">
+                <Table hover borderless striped size="sm">
                     <thead className="thead-dark">
                         <tr>
                             <th>Listing #</th>
                             <th>Item ID</th>
                             <th>Item Name</th>
-                            <th>Price</th>
+                            <th>Price ($)</th>
                             <th>Quantity</th>
                             <th></th>
                         </tr>
@@ -143,59 +156,70 @@ class MyListings extends Component {
                                 <td>{listing.item_id}</td>
                                 <td>{listing.item_name}</td>
                                 <td>
-                                    <form name="updatePrice" onSubmit={e => this.updateListings(e, listing)}>
-                                        $
-                                        <input 
-                                            name="price"
-                                            type="number"
-                                            min="0"
-                                            step="0.01"
-                                            value={(this.state.listings[index].price / 100).toFixed(2)}
-                                            onChange={e => this.handleInputChange(e, index)}
-                                        />
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary"
-                                            size="sm"
-                                        >
-                                            Update
-                                        </button>
-                                    </form>
+                                        <Form name="updatePrice" onSubmit={e => this.updateListings(e, listing)}>
+                                            <Form.Row align="center">
+                                                <Col>
+                                                    <CurrencyInput
+                                                        name="price"
+                                                        type="number"
+                                                        size="sm"
+                                                        value={this.state.listings[index].price}
+                                                        onChange={(e, maskedValue) => this.handleInputChange(e, index, maskedValue)}
+                                                    />
+                                                </Col>
+                                                <Col align="left">
+                                                    <Button
+                                                        type="submit"
+                                                        variant="primary"
+                                                        size="sm"
+                                                    >
+                                                        Update Price
+                                                    </Button>
+                                                </Col>
+                                            </Form.Row>
+                                        </Form>
                                 </td>
                                 <td>
-                                    <form name="updateQuantity" onSubmit={e => this.updateListings(e, listing)}>
-                                        <input 
-                                            name="quantity"
-                                            type="number"
-                                            min="0"
-                                            step="1"
-                                            value={this.state.listings[index].quantity}
-                                            onChange={e => this.handleInputChange(e, index)}
-                                        />
-                                        <button
-                                            type="submit"
-                                            className="btn btn-primary"
-                                            size="sm"
-                                        >
-                                            Update
-                                        </button>
-                                    </form>
+                                    <Form name="updateQuantity" onSubmit={e => this.updateListings(e, listing)}>
+                                        <Form.Row>
+                                            <Col>
+                                                <Form.Control
+                                                    name="quantity"
+                                                    type="number"
+                                                    min="0"
+                                                    step="1"
+                                                    size="sm"
+                                                    value={this.state.listings[index].quantity}
+                                                    onChange={e => this.handleInputChange(e, index)}
+                                                />
+                                            </Col>
+                                            <Col align="left">
+                                                <Button
+                                                    type="submit"
+                                                    variant="primary"
+                                                    size="sm"
+                                                >
+                                                    Update Quantity
+                                                </Button>
+                                            </Col>
+                                        </Form.Row>
+                                    </Form>
                                 </td>
                                 <td>
-                                    <button
+                                    <Button
                                         name="deleteListing" 
                                         type="button" 
-                                        className="btn btn-danger" 
+                                        variant="danger"
                                         size="sm"
                                         onClick={e => this.updateListings(e, listing)}
                                     >
                                         Delete
-                                    </button>
+                                    </Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </Table>
             </div>
         );
     }

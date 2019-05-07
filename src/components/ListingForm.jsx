@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
+import CurrencyInput from "react-currency-masked-input";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 class ListingForm extends Component {
   constructor(props) {
@@ -13,22 +15,29 @@ class ListingForm extends Component {
     };
   };
 
-  handleInputChange = e => {
+  handleInputChange = (e, maskedValue) => {
     const target = e.target;
-    this.setState({
-      [target.name]: target.value
-    });
+    if (target.name === "quantity") {
+      this.setState({
+        [target.name]: target.value
+      });
+    }else if (target.name === "price") {
+      this.setState({
+        [target.name]: maskedValue
+      });
+    }
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const new_price = this.state.price * 100;
+    const priceInCents = this.state.price * 100;
     const data = JSON.stringify({
       item: this.state.item,
       seller: this.state.seller,
       quantity: this.state.quantity,
-      price: new_price
+      price: priceInCents
     });
+    console.log(data)
     fetch(API + "/create_listing", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -51,60 +60,57 @@ class ListingForm extends Component {
     return (
       <div className="container">
         <h3>Create a new listing</h3>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group>
+            <Form.Label>
               Item ID:
-              <input
-                className="form-control"
+              <Form.Control
                 name="item"
                 value={this.state.item}
                 onChange={this.handleInputChange}
                 readOnly
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Quantity:
-              <input
-                className="form-control"
+              <Form.Control
                 name="quantity"
                 type="number"
                 min="1"
                 step="1"
                 value={this.state.quantity}
                 onChange={this.handleInputChange}
-                placeholder="Enter a number"
+                placeholder="Enter a quantity"
                 required
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              Price: $
-              <input
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
+              Price ($): 
+              <CurrencyInput
                 className="form-control"
                 name="price"
-                type="number"
-                min="0"
-                step="0.01"
                 value={this.state.price}
                 onChange={this.handleInputChange}
                 placeholder="Enter a price"
                 required
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </form>
+            </Form.Label>
+          </Form.Group>
+          <Button 
+            type="submit" 
+            variant="primary"
+          >
+            Submit
+          </Button>
+        </Form>
       </div>
     );
   }
 }
 
 export default ListingForm;
+

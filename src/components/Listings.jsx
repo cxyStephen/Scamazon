@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
 import StarRatingComponent from "react-star-rating-component";
 
 class Listings extends Component {
@@ -49,7 +50,7 @@ class Listings extends Component {
   listingSort = (listings, sort_by) => {
     // eslint-disable-next-line default-case
     switch (sort_by) {
-      case "item_rating":
+      case "itemRating":
         listings.sort(
           (a, b) => parseInt(b.item_rating) - parseInt(a.item_rating)
         );
@@ -87,6 +88,10 @@ class Listings extends Component {
 
   render() {
     let { listings } = this.state;
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
 
     return (
       <div className="container">
@@ -123,8 +128,8 @@ class Listings extends Component {
                   onChange={this.handleInputChange}
                   className="custom-select"
                 >
-                  <option value="item_rating">Item Rating</option>
-                  <option value="seller_rating">Seller Rating</option>
+                  <option value="itemRating">Item Rating</option>
+                  <option value="sellerRating">Seller Rating</option>
                   <option value="item">Item Name</option>
                   <option value="seller">Seller Name</option>
                   <option value="highestPrice">Highest Price</option>
@@ -134,7 +139,7 @@ class Listings extends Component {
             </Col>
           </Row>
         </Form>
-        <table className="table table-hover table-sm table-borderless table-striped">
+        <Table hover borderless striped size="sm">
           <thead className="thead-dark">
             <tr>
               <th>Item</th>
@@ -155,7 +160,9 @@ class Listings extends Component {
                       {listing.item_name}
                     </Link>
                   </td>
-                  <td>${(listing.price / 100).toFixed(2)}</td>
+                  <td>
+                    {formatter.format(listing.price / 100)}
+                  </td>
                   <td>{listing.quantity}</td>
                   <td>
                     <Link to={"store/" + listing.seller_id}>
@@ -181,7 +188,7 @@ class Listings extends Component {
                 </tr>
               ))}
           </tbody>
-        </table>
+        </Table>
       </div>
     );
   }
