@@ -178,6 +178,7 @@ class Listings extends Component {
                       editing={false}
                       starCount={5}
                       value={listing.item_rating}
+                      renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                     />
                   </td>
                   <td>
@@ -186,6 +187,7 @@ class Listings extends Component {
                       editing={false}
                       starCount={5}
                       value={listing.seller_rating}
+                      renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                     />
                   </td>
                   <td width={120}>

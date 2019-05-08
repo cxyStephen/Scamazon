@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import StarRatingComponent from "react-star-rating-component";
+import HalfStar from "./star-half.png"
 import API from "../constants";
 import { Link } from "react-router-dom";
 import AddToCart from "./AddToCart";
@@ -77,6 +78,7 @@ class Store extends Component {
               editing={false}
               starCount={5}
               value={rating}
+              renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
             />
             <h4>Currently selling:</h4>
             <table className="table table-bordered table-hover">
@@ -98,6 +100,7 @@ class Store extends Component {
                         editing={false}
                         starCount={5}
                         value={listing.item_rating}
+                        renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                       />
                     </td>
                     <td>${(listing.price / 100).toFixed(2)}</td>
@@ -139,6 +142,7 @@ class Store extends Component {
                     editing={false}
                     starCount={5}
                     value={review.rating}
+                    renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                   />
                   <p>{review.desc}</p>
                   <hr />

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Image from "react-bootstrap/Image";
 import AddToCart from "./AddToCart";
 import ReviewForm from "./ReviewForm";
+import HalfStar from "./star-half.png"
 
 class Item extends Component {
   constructor(...args) {
@@ -84,6 +85,7 @@ class Item extends Component {
               editing={false}
               starCount={5}
               value={rating}
+              renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
             />
             {images.length > 0 && (
               <div
@@ -122,6 +124,7 @@ class Item extends Component {
                         editing={false}
                         starCount={5}
                         value={listing.seller_rating}
+                        renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                       />
                     </td>
                     <td>${(listing.price / 100).toFixed(2)}</td>
@@ -163,6 +166,7 @@ class Item extends Component {
                     editing={false}
                     starCount={5}
                     value={review.rating}
+                    renderStarIconHalf={() => <span><Image src={HalfStar} /></span>}
                   />
                   <p>{review.desc}</p>
                   <hr />

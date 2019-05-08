@@ -44,7 +44,8 @@ class ItemForm extends Component {
       name: this.state.name,
       desc: this.state.desc,
       manufacturer: this.state.manufacturer,
-      category: this.state.category
+      category: this.state.category,
+      image_url: this.state.image_url
     });
     fetch(API + "/create_item", {
       method: "post",

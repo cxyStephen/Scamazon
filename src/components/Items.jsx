@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import API from "../constants";
 import { Link } from "react-router-dom";
-import Button from "react-bootstrap/Button";
 
 class Items extends Component {
   constructor(props) {

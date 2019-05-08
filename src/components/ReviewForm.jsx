@@ -8,7 +8,7 @@ class ReviewForm extends Component {
     super(props);
     this.state = {
       title: undefined,
-      rating: 3,
+      rating: 0,
       desc: undefined,
       name: ""
     };
@@ -48,6 +48,12 @@ class ReviewForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
+    if (this.state.rating === 0) {
+        alert("You must enter a rating!");
+        return;
+    }
+
     const data = JSON.stringify({
         user: this.props.email,
         title: this.state.title,
