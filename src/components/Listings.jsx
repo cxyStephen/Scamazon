@@ -6,6 +6,8 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import StarRatingComponent from "react-star-rating-component";
+import Image from "react-bootstrap/Image";
+import HalfStar from "./star-half.png"
 import AddToCart from "./AddToCart";
 
 class Listings extends Component {

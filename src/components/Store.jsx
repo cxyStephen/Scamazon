@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import StarRatingComponent from "react-star-rating-component";
+import Image from "react-bootstrap/Image";
 import HalfStar from "./star-half.png"
 import API from "../constants";
 import { Link } from "react-router-dom";
