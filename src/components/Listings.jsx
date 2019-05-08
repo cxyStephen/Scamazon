@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import StarRatingComponent from "react-star-rating-component";
+import AddToCart from "./AddToCart";
 
 class Listings extends Component {
   constructor(props) {
@@ -149,6 +150,7 @@ class Listings extends Component {
               <th>Seller Name</th>
               <th>Item Rating</th>
               <th>Seller Rating</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -185,6 +187,13 @@ class Listings extends Component {
                       starCount={5}
                       value={listing.seller_rating}
                     />
+                  </td>
+                  <td width={120}>
+                      <AddToCart
+                        email={this.props.email}
+                        item={listing.item_id}
+                        seller={listing.seller_id}
+                      />
                   </td>
                 </tr>
               ))}
