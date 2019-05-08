@@ -23,6 +23,7 @@ class Listings extends Component {
     fetch(API + "/get_listings")
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         data.listings.sort(
           (a, b) => parseInt(b.item_rating) - parseInt(a.item_rating)
         );

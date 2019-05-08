@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import API from "../constants";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button"
+import Badge from "react-bootstrap/Badge";
+import Alert from "react-bootstrap/Alert";
 
 class ItemForm extends Component {
   constructor(props) {
@@ -11,28 +15,20 @@ class ItemForm extends Component {
       manufacturer: "",
       category: "",
       categories: [],
-      isLoading: false,
-      error: null
+      success: false,
+      message: ""
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
     this.setState({ isLoading: true });
 
     fetch(API + "/get_categories")
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Something went wrong...");
-        }
-      })
+      .then(response => response.json())
       .then(data =>
-        this.setState({ categories: data.categories, isLoading: false })
+        this.setState({ categories: data.categories})
       )
-      .catch(error => this.setState({ error, isLoading: false }));
+      .catch(error => console.error(error));
   }
 
   handleInputChange = e => {
@@ -57,89 +53,77 @@ class ItemForm extends Component {
     })
     .then(response => response.json())
     .then(data => {
+      this.setState({success: data.success});
+      this.setState({message: data.message});
       console.log(data.success + "\n" + data.message);
-      if (data.success) {
-        alert("A new item was created.");
-        window.location.reload();
-      } else {
-        alert("Error: Could not create a new item.");
-      }
     })
     .catch(error => console.error(error));
   }
 
   render() {
-    const { categories, isLoading, error } = this.state;
-
-    if (error) {
-      return <p>{error.message}</p>;
-    }
-
-    if (isLoading) {
-      return <p>Loading...</p>;
-    }
+    const { categories } = this.state;
+    let errorAlert;
+    let itemCreated;
+    if (this.state.success)
+      itemCreated = <Badge pill variant="success">Item Created</Badge>
+    else if (this.state.message.length > 0)
+      errorAlert = <Alert variant="danger" size="sm">{this.state.message}</Alert>;
 
     return (
       <div className="container">
         <h3>Create a new item</h3>
-        <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label>
-              Item Name:
-              <input
-                className="form-control"
-                name="name"
-                type="text"
-                value={this.state.name}
-                onChange={this.handleInputChange}
-                placeholder="Enter a name"
-                required
-              />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group>
+              <Form.Label>
+                Item Name:
+                <Form.Control
+                  name="name"
+                  value={this.state.name}
+                  onChange={this.handleInputChange}
+                  placeholder="Enter a name"
+                  required
+                />
+              </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Item Image URL:
-              <input
-                className="form-control"
+              <Form.Control
                 name="image_url"
-                type="text"
                 value={this.state.image_url}
                 onChange={this.handleInputChange}
                 placeholder="Enter an image URL"
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Item Description:
-              <textarea
-                className="form-control"
+              <Form.Control
+                as="textarea"
                 name="desc"
                 value={this.state.description}
                 onChange={this.handleInputChange}
                 placeholder="Enter a description"
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Item Manufacturer:
-              <input
-                className="form-control"
+              <Form.Control
                 name="manufacturer"
-                type="text"
                 value={this.state.manufacturer}
                 onChange={this.handleInputChange}
                 placeholder="Enter a manufacturer"
               />
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
+            </Form.Label>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
               Item Category:
-              <select
-                className="form-control"
+              <Form.Control 
+                as="select"
                 name="category"
                 value={this.state.category}
                 onChange={this.handleInputChange}
@@ -147,15 +131,15 @@ class ItemForm extends Component {
                 {categories.map(category => (
                   <option value={category} key={category}>{category}</option>
                 ))}
-              </select>
-            </label>
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </form>
+              </Form.Control>
+            </Form.Label>
+          </Form.Group>
+          <Button type="submit" variant="primary">
+            Submit
+          </Button>
+        </Form>
+        {itemCreated}
+        {errorAlert}
       </div>
     );
   }

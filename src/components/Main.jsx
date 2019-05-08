@@ -16,6 +16,7 @@ import ListingForm from "./ListingForm";
 import Checkout from "./Checkout";
 import MyListings from "./MyListings";
 import MyOrders from "./MyOrders";
+import ItemForm from "./ItemForm";
 
 class Main extends Component {
   render() {
@@ -33,6 +34,13 @@ class Main extends Component {
             exact
             path="/sell"
             render={props => <SellPage {...props} email={this.props.email} />}
+          />
+          <Route 
+            exact
+            path="/createitem"
+            render={props => (
+              <ItemForm {...props} email={this.props.email} />
+            )}
           />
           <Route
             exact

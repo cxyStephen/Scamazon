@@ -5,14 +5,19 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col"
+import Alert from "react-bootstrap/Alert";
+import Badge from "react-bootstrap/Badge";
 
 class CartPage extends Component {
 
     constructor(props) {
         super(props);
+        this.indexOfUpdatedContent = -1;
         this.state = {
           contents: [],
           subtotal: "",
+          success: false,
+          message: ""
         };
       }
 
@@ -34,18 +39,19 @@ class CartPage extends Component {
         .catch(error => console.error(error));
     }
 
-    updateCart = (e, content) => {
+    updateCart = (e, content, index) => {
         const target = e.target;
         let data;
-        if (target.name === "deleteItem") {
+        if (target.name === "delete") {
             data = JSON.stringify({
                 email: this.props.email,
                 item: content.item_id,
                 seller: content.seller,
                 quantity: 0
             });
-        } else if (target.name === "updateQuantity") {
+        } else if (target.name === "update") {
             e.preventDefault();
+            this.indexOfUpdatedContent = index;
             data = JSON.stringify({
                 email: this.props.email,
                 item: content.item_id,
@@ -60,11 +66,15 @@ class CartPage extends Component {
         })
         .then(response => response.json())
         .then(data => {
+            this.setState({success: data.success});
+            this.setState({message: data.message});
             console.log(data.success + "\n" + data.message);
             if (data.success) {
+                /*
                 if (target.name === "updateQuantity") {
                     alert("Item quantity was updated");
                 }
+                */
                 const path = "/get_cart";
                 const query = "?user=" + this.props.email;
                 if (query.length === 6) 
@@ -117,7 +127,7 @@ class CartPage extends Component {
             style: 'currency',
             currency: 'USD'
         });
-
+        
         return (
             <div className="container">
                 <h1>Shopping Cart</h1>
@@ -132,50 +142,66 @@ class CartPage extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {contents.map((content, index) => (
-                        <tr key={index}>
-                            <td><Link to={"item/"+content.item_id}>{content.item_name}</Link></td>
-                            <td>{content.seller}</td>
-                            <td>{formatter.format(content.price / 100)}</td>
-                            <td>
-                                <Form name="updateQuantity" onSubmit={e => this.updateCart(e, content)}>
-                                    <Form.Row>
-                                        <Col>
-                                            <Form.Control
-                                                name="quantity"
-                                                type="number"
-                                                min="0"
-                                                step="1"
-                                                value={this.state.contents[index].quantity}
-                                                onChange={e => this.handleInputChange(e, index)}
-                                                size="sm"
-                                            />
-                                        </Col>
-                                        <Col align="left">
-                                            <Button
-                                                type="submit"
-                                                variant="primary"
-                                                size="sm"
-                                            >
-                                                Update
-                                            </Button>
-                                        </Col>
-                                    </Form.Row>
-                                </Form>
-                            </td>
-                            <td>
-                                <Button 
-                                    name="deleteItem" 
-                                    type="button" 
-                                    variant="danger" 
-                                    size="sm"
-                                    onClick={e => this.updateCart(e, content, index)}
-                                >
-                                    Delete
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
+                    {contents.map((content, index) => {
+                        let errorAlert;
+                        let updated;
+                        if (this.indexOfUpdatedContent === index) {
+                            if (this.state.success)
+                                updated = <Badge pill variant="success" size="sm">Updated</Badge>
+                            else if (this.state.message.length > 0)
+                                errorAlert = <Alert variant="danger" size="sm">{this.state.message}</Alert>;
+                        }
+                        return (
+                            <tr key={index}>
+                                <td><Link to={"item/"+content.item_id}>{content.item_name}</Link></td>
+                                <td>{content.seller}</td>
+                                <td>{formatter.format(content.price / 100)}</td>
+                                <td>
+                                    <Form name="update" onSubmit={e => this.updateCart(e, content, index)}>
+                                        <Form.Row>
+                                            <Col>
+                                                <Form.Control
+                                                    name="quantity"
+                                                    type="number"
+                                                    min="0"
+                                                    step="1"
+                                                    value={this.state.contents[index].quantity}
+                                                    onChange={e => this.handleInputChange(e, index)}
+                                                    size="sm"
+                                                />
+                                            </Col>
+                                            <Col align="left">
+                                                <Button
+                                                    type="submit"
+                                                    variant="primary"
+                                                    size="sm"
+                                                >
+                                                    Update
+                                                </Button>
+                                            </Col>
+                                        </Form.Row>
+                                        <Form.Row align="left">
+                                            <Col>
+                                                {updated}
+                                                {errorAlert}
+                                            </Col>
+                                        </Form.Row>
+                                    </Form>
+                                </td>
+                                <td>
+                                    <Button 
+                                        name="delete" 
+                                        type="button" 
+                                        variant="danger" 
+                                        size="sm"
+                                        onClick={e => this.updateCart(e, content, index)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
                 </Table>
                 <h5 align="right">Subtotal: ${(subtotal / 100).toFixed(2)}</h5>
@@ -185,7 +211,6 @@ class CartPage extends Component {
                         type="button" 
                         variant="success"
                         onClick={this.handleCartCheckout}
-                        size="sm"
                     >
                         Checkout
                     </Button>

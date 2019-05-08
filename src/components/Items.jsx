@@ -79,9 +79,7 @@ class Items extends Component {
                 <td>{item.category}</td>
                 <td>
                   <Link to={"/createlisting/" + item.item_id} name={item.name}>
-                    <Button className="btn btn-primary" size="sm">
                       Create Listing
-                    </Button>
                   </Link>
                 </td>
               </tr>

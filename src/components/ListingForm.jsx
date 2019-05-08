@@ -3,6 +3,8 @@ import API from "../constants";
 import CurrencyInput from "react-currency-masked-input";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import Badge from "react-bootstrap/Badge";
 
 class ListingForm extends Component {
   constructor(props) {
@@ -11,7 +13,9 @@ class ListingForm extends Component {
       item: this.props.match.params.item_id,
       seller: this.props.email,
       quantity: "",
-      price: ""
+      price: "", 
+      success: false, 
+      message: ""
     };
   };
 
@@ -21,7 +25,7 @@ class ListingForm extends Component {
       this.setState({
         [target.name]: target.value
       });
-    }else if (target.name === "price") {
+    } else if (target.name === "price") {
       this.setState({
         [target.name]: maskedValue
       });
@@ -37,7 +41,6 @@ class ListingForm extends Component {
       quantity: this.state.quantity,
       price: priceInCents
     });
-    console.log(data)
     fetch(API + "/create_listing", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -45,18 +48,26 @@ class ListingForm extends Component {
     })
     .then(response => response.json())
     .then(data => {
+      this.setState({success: data.success});
+      this.setState({message: data.message});
       console.log(data.success + "\n" + data.message);
+      /*
       if (data.success) {
-        alert("A new listing was created.");
         this.props.history.push("/sell");
-      } else {
-        alert("Error: Could not create new listing.");
       }
+      */
     })
     .catch(error => console.error(error));
   };
 
   render() {
+    let errorAlert;
+    let listingCreated;
+    if (this.state.success)
+      listingCreated = <Badge pill variant="success">Listing Created</Badge>
+    else if (this.state.message.length > 0)
+      errorAlert = <Alert variant="danger" size="sm">{this.state.message}</Alert>;
+
     return (
       <div className="container">
         <h3>Create a new listing</h3>
@@ -107,6 +118,8 @@ class ListingForm extends Component {
             Submit
           </Button>
         </Form>
+        {listingCreated}
+        {errorAlert}
       </div>
     );
   }
