@@ -105,9 +105,9 @@ class NewPayment extends Component {
       form = (
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="key">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>Paypal Email</Form.Label>
             <Form.Control
-              placeholder="Cardholder's name"
+              placeholder="Paypal Email"
               onChange={this.handleChange}
               type="email"
             />
