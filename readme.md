@@ -1,74 +1,45 @@
-## Dependencies
+![](scamazon.png)
 
-React Router `npm install --save react-router-dom`
+Scamazon Marketplace
+==================
+A proof-of-concept e-commerce website that supports both seller and customer accounts.\
 
-React Bootstrap `npm install react-bootstrap bootstrap`
+**Authors**: [@cxyStephen](https://github.com/cyxStephen), [@SBU-bjlee](https://github.com/SBU-bjlee), and [@tiffanyhe](https://github.com/tiffanyhe)
 
-React Router Bootstrap `npm install -S react-router-bootstrap`
+* * *
+#### Demo
+![](sdemo1.png)
 
-## Available Scripts
+![](sdemo2.png)
 
-In the project directory, you can run:
+![](sdemo3.png)
 
-### `npm start`
+![](sdemo4.png)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* * *
+#### Built using
+* **MySQL** 8.0.16
+* **Python** 3.7.0
+* **Flask** 1.0.3
+* **Flask-CORS** 3.0.8
+* **MySQL Connector** 8.0.16
+* **Node.js** 12.2.0
+* **React** 16.8.6
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+* * *
+#### Build instructions
+* Clone repo and make sure that MySQL, Python, and Node.js are installed
+* **Backend:** (cd into `scamazon/backend/`)
+* Create a MySQL database called `scamazon`
+* Execute `create_tables.sql` to create the required tables
+* *Optional:* Execute `sample_data.sql` to populate the tables with sample data 
+* Change the database info and credentials in `scamazon.py` on lines 14-17
+* Activate the virtual environment: `. venv/bin/activate` (`venv\Scripts\activate` on Windows)
+* If not installed, install [Flask](http://flask.pocoo.org/docs/1.0/): `pip install Flask`
+* If not installed, install [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/): `pip install flask-cors`
+* If not installed, install [MySQL Connector](https://pypi.org/project/mysql-connector-python/): `pip install mysql-connector-python`
+* Set the Flask environment variable: `export FLASK_APP=scamazon.py` (`set FLASK_APP=scamazon.py` on Windows)
+* Run the server: `flask run`
+* **Frontend:** (cd into `scamazon/frontend/`)
+* Change the API url to match Flask in `src/constants.js` on line 1 
+* Start the app: `npm start`
