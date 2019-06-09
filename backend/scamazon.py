@@ -11,7 +11,7 @@ CORS(app)
 def connect_db():
     if not hasattr(g, 'database'):
         g.database = mysql.connector.connect(
-            database="305",
+            database="scamazon",
             host="localhost",
             user="root",
             passwd="password"
